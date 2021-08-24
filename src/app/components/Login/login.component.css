@@ -1,0 +1,9 @@
+.centerAlign {
+  text-align: center;
+}
+.loginComponent {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  background-color: aquamarine;
+}
