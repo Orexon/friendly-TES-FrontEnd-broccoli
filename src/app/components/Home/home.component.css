@@ -1,0 +1,24 @@
+.landingImg {
+  width: 300px;
+}
+
+.landing {
+  height: calc(100vh - 44px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qoute {
+  margin: 50px;
+  color: darkblue;
+  font-size: 16px;
+  font-weight: 500;
+  max-width: 400px;
+}
+
+@media screen and (max-width: 768px) {
+  .landing {
+    flex-direction: column;
+  }
+}

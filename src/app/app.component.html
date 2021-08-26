@@ -1,14 +1,29 @@
-<!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-  <div class="navbar-nav">
-    <a class="nav-item nav-link" routerLink="/" routerLinkActive="active"
-      >Home</a
-    >
-    <a class="nav-item nav-link" (click)="logout()">Logout</a>
+<nav class="navBar" color="primary" *ngIf="currentUser">
+  <div class="menuBar" (click)="openEvent()">
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
   </div>
+  <ul class="nav-links" [ngClass]="status ? 'open' : ''">
+    <li>
+      <a mat-button routerLink="/" routerLinkActive="active">Home</a>
+    </li>
+    <li>
+      <a mat-button routerLink="/prices">Prices</a>
+    </li>
+    <li>
+      <a mat-button routerLink="/start-page">Start page</a>
+    </li>
+    <li>
+      <a mat-button routerLink="/offer">Offer</a>
+    </li>
+    <li>
+      <a mat-button routerLink="/contact">Contact</a>
+    </li>
+    <li>
+      <a mat-button (click)="logout()">Logout</a>
+    </li>
+  </ul>
 </nav>
 
-<!-- main app container -->
-<div class="container-fluid">
-  <router-outlet></router-outlet>
-</div>
+<router-outlet></router-outlet>

@@ -1,9 +1,43 @@
 .centerAlign {
   text-align: center;
 }
+
 .loginComponent {
-  display: flex;
   height: 100vh;
+  display: flex;
+  align-items: center;
   justify-content: center;
   background-color: aquamarine;
+}
+
+.loginCard {
+  min-width: 300px;
+}
+.loginInput {
+  min-width: 250px;
+  margin: 12px 0px;
+}
+.loginInputPass {
+  min-width: 250px;
+  margin-top: 12px;
+}
+.loginButton {
+  min-width: 250px;
+  margin: 12px 0;
+}
+
+.alert-section {
+  margin-bottom: 5px;
+  margin-top: 5px;
+  height: 20px;
+}
+
+mat-card-title {
+  text-align: center;
+  padding-top: 12px;
+}
+
+mat-card-content {
+  display: flex;
+  justify-content: center;
 }
