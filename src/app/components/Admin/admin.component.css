@@ -1,6 +1,29 @@
 .userContainer {
   z-index: 1;
-  padding: 30px;
+  width: 90%;
+  margin: auto;
+  transition: 1s all ease;
+}
+
+@media screen and (min-width: 1400px) {
+  .userContainer {
+    width: 80%;
+    margin: auto;
+    transition: 1s all ease;
+  }
+}
+
+.userHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 44px;
+  margin-bottom: 44px;
+}
+
+.adminHeading {
+  font-size: 28px;
+  font-weight: 500;
 }
 
 table {
@@ -21,14 +44,17 @@ table {
   font-weight: 500;
 }
 
-.userHeading {
-  display: flex;
-}
-.newAdminBtn {
-  justify-content: flex-end;
-}
-
 @media screen and (max-width: 768px) {
+  .userContainer {
+    z-index: 1;
+    margin: auto;
+    width: 90%;
+    transition: 1s all ease;
+  }
+
+  .userTable {
+    transition: 2s all ease;
+  }
   .mat-table[matTableResponsive] .mat-header-row {
     display: flex;
     flex-wrap: wrap;

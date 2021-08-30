@@ -1,10 +1,10 @@
 <section class="userContainer">
-  <!-- <div class="userHeading">
-    <p>Admin management</p>
-    <button mat-stroked-button class="newAdminBtn">Add New</button>
-  </div> -->
+  <div class="userHeading">
+    <div class="adminHeading">Admin management</div>
+    <button mat-raised-button class="newAdminBtn">New Admin</button>
+  </div>
 
-  <div class="mat-elevation-z8">
+  <div class="userTable mat-elevation-z8">
     <table mat-table matSort matTableResponsive [dataSource]="dataSource">
       <ng-container matColumnDef="userName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>UserName</th>
