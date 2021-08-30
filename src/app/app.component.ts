@@ -1,7 +1,8 @@
-import { Component, Inject } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from './models/user';
 import { AuthenticationService } from './services/authentication.service';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app',
@@ -11,11 +12,28 @@ import { AuthenticationService } from './services/authentication.service';
 export class AppComponent {
   currentUser: User;
   title = 'Tech Evaluation System';
-  status: boolean = false;
+  isOpen: boolean = false;
+
+  resizeObservable$: Observable<Event>;
+  resizeSubscription$: Subscription;
+
+  ngOnInit() {
+    this.resizeObservable$ = fromEvent(window, 'resize');
+    this.resizeSubscription$ = this.resizeObservable$.subscribe((evt) => {
+      if (window.innerWidth > 768 && this.isOpen === true) {
+        this.isOpen = !this.isOpen;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.resizeSubscription$.unsubscribe();
+  }
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private elem: ElementRef
   ) {
     this.authenticationService.currentUser.subscribe(
       (x) => (this.currentUser = x)
@@ -23,12 +41,12 @@ export class AppComponent {
   }
 
   logout() {
-    this.status = false;
+    this.isOpen = false;
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }
 
-  openEvent() {
-    this.status = !this.status;
+  toggleCollapse() {
+    this.isOpen = !this.isOpen;
   }
 }

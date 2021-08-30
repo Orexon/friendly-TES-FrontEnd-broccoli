@@ -6,8 +6,6 @@ import { first } from 'rxjs/operators';
   styleUrls: ['home.component.css'],
 })
 export class HomeComponent {
-  loading = false;
-
   constructor() {}
 
   ngOnInit() {}

@@ -1,27 +1,29 @@
-<nav class="navBar" color="primary" *ngIf="currentUser">
-  <div class="menuBar" (click)="openEvent()">
+<nav class="navBar" *ngIf="currentUser">
+  <div class="menuBar" (click)="toggleCollapse()">
     <div class="line"></div>
     <div class="line"></div>
     <div class="line"></div>
   </div>
-  <ul class="nav-links" [ngClass]="status ? 'open' : ''">
+  <ul class="nav-links" [ngClass]="{ open: isOpen }">
     <li>
-      <a mat-button routerLink="/" routerLinkActive="active">Home</a>
+      <a routerLink="/" (click)="toggleCollapse()" routerLinkActive="active"
+        >Home</a
+      >
     </li>
     <li>
-      <a mat-button routerLink="/prices">Prices</a>
+      <a (click)="toggleCollapse()" routerLink="admin">Admin</a>
     </li>
     <li>
-      <a mat-button routerLink="/start-page">Start page</a>
+      <a (click)="toggleCollapse()" routerLink="/start-page">Tests</a>
     </li>
     <li>
-      <a mat-button routerLink="/offer">Offer</a>
+      <a (click)="toggleCollapse()" routerLink="/offer">Results</a>
     </li>
     <li>
-      <a mat-button routerLink="/contact">Contact</a>
+      <a (click)="toggleCollapse()" routerLink="/contact">Questions</a>
     </li>
     <li>
-      <a mat-button (click)="logout()">Logout</a>
+      <a (click)="logout()">Logout</a>
     </li>
   </ul>
 </nav>

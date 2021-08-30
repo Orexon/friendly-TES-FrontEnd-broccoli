@@ -2,32 +2,27 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-
-//component
-import { HomeComponent } from './components/Home/home.component';
-import { LoginComponent } from './components/Login/login.component';
-import { AlertModule } from './helpers/alert/alert.module';
-
-import { JwtInterceptor } from './helpers/jwt.interceptor';
-import { ErrorInterceptor } from './helpers/error.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AppRoutingModule } from './app-routing.module';
+import { AlertModule } from './helpers/alert/alert.module';
+import { JwtInterceptor } from './helpers/jwt.interceptor';
+import { ErrorInterceptor } from './helpers/error.interceptor';
+
+//component
+import { AppComponent } from './app.component';
+import { HomeComponent } from './components/Home/home.component';
+import { LoginComponent } from './components/Login/login.component';
+import { AdminComponent } from './components/Admin/admin.component';
+
 //Angular Material.
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { DemoMaterialModule } from './material-module';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   imports: [
-    MatCardModule,
-    MatInputModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    FlexLayoutModule,
+    DemoMaterialModule,
+    MatSortModule,
     AlertModule,
     BrowserModule,
     ReactiveFormsModule,
@@ -35,7 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     AppRoutingModule,
     BrowserAnimationsModule,
   ],
-  declarations: [AppComponent, HomeComponent, LoginComponent],
+  declarations: [AppComponent, HomeComponent, LoginComponent, AdminComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
