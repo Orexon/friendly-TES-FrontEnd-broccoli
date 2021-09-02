@@ -1,8 +1,9 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from './models/user';
 import { AuthenticationService } from './services/authentication.service';
 import { fromEvent, Observable, Subscription } from 'rxjs';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 @Component({
   selector: 'app',
@@ -16,6 +17,8 @@ export class AppComponent {
 
   resizeObservable$: Observable<Event>;
   resizeSubscription$: Subscription;
+
+  @ViewChild('navBar') scrollTarget: ElementRef;
 
   ngOnInit() {
     this.resizeObservable$ = fromEvent(window, 'resize');
@@ -48,5 +51,10 @@ export class AppComponent {
 
   toggleCollapse() {
     this.isOpen = !this.isOpen;
+    if (this.isOpen) {
+      disableBodyScroll(this.scrollTarget.nativeElement);
+    } else {
+      enableBodyScroll(this.scrollTarget.nativeElement);
+    }
   }
 }
