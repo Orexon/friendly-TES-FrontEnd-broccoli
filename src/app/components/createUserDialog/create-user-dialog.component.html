@@ -1,0 +1,122 @@
+<h1 mat-dialog-title class="dialogTitle">{{ dialogTitle }}</h1>
+<!-- on submit pass response to the main component show error there. -->
+<form [formGroup]="adminForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-content>
+    <!-- Username -->
+    <div>
+      <mat-form-field>
+        <input
+          type="text"
+          matInput
+          placeholder="Username"
+          formControlName="username"
+          [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+        />
+        <mat-error *ngIf="f['username'].errors?.required"
+          >Username is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <!-- Email -->
+    <div>
+      <mat-form-field>
+        <input
+          type="text"
+          matInput
+          placeholder="Email"
+          formControlName="email"
+          [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+        />
+        <mat-error *ngIf="f['email'].errors?.required"
+          >Email is required</mat-error
+        >
+        <mat-error *ngIf="f.email.errors?.email"
+          >Email has to be valid email</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <!-- firstName  -->
+    <div>
+      <mat-form-field>
+        <input
+          type="text"
+          matInput
+          placeholder="Firstname"
+          formControlName="firstname"
+          [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }"
+        />
+        <mat-error *ngIf="f['firstname'].errors?.required"
+          >Firstname is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <!-- lastName -->
+    <div>
+      <mat-form-field>
+        <input
+          type="text"
+          matInput
+          placeholder="Lastname"
+          formControlName="lastname"
+          [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }"
+        />
+        <mat-error *ngIf="f['lastname'].errors?.required"
+          >Lastname is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <!-- Password -->
+    <div>
+      <mat-form-field class="loginInputPass">
+        <input
+          matInput
+          placeholder="Password"
+          type="password"
+          formControlName="password"
+          minlength="6"
+          [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+        />
+        <mat-error *ngIf="f['password'].errors?.required"
+          >Password is required</mat-error
+        >
+        <mat-error *ngIf="f.password.errors?.minlength"
+          >Password too short</mat-error
+        >
+        <mat-error *ngIf="f.password.errors?.maxlength"
+          >Password too long</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <!-- Confirm password -->
+    <div>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Confirm Password"
+          type="password"
+          formControlName="confirmPassword"
+          [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+        />
+        <mat-error *ngIf="f['confirmPassword'].errors?.required"
+          >Confirmation is required</mat-error
+        >
+        <mat-error *ngIf="f.confirmPassword.errors?.mustMatch"
+          >Passwords must match</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+  <div mat-dialog-actions class="dialogBtnContainer">
+    <button mat-stroked-button mat-dialog-close>Close</button>
+    <button
+      type="submit"
+      mat-raised-button
+      [disabled]="loading"
+      [disabled]="!adminForm.valid"
+      class="confirmBtn"
+    >
+      <mat-spinner *ngIf="loading" [diameter]="10"></mat-spinner
+      >{{ confirmBtnTxt }}
+    </button>
+  </div>
+</form>

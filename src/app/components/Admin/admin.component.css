@@ -4,6 +4,9 @@
   margin: auto;
   transition: 1s all ease;
 }
+.userTable {
+  margin-top: 15px;
+}
 
 @media screen and (min-width: 1400px) {
   .userContainer {
@@ -24,12 +27,15 @@
 .adminHeading {
   font-size: 28px;
   font-weight: 500;
+  text-shadow: 1px 1px 0px rgba(125, 125, 125, 0.42);
 }
-
+.newAdminBtn {
+  color: #ffffff;
+  background-color: #2f2e41;
+}
 table {
   width: 100%;
 }
-
 .mat-column-actions {
   text-align: end;
   justify-content: flex-end;

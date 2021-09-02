@@ -1,0 +1,14 @@
+.confirmBtn {
+  color: #ffffff;
+  background-color: #2f2e41;
+}
+.dialogBtnContainer {
+  justify-content: space-between;
+}
+.centerAlign {
+  text-align: center;
+}
+.confirmTxt {
+  font-size: 24px;
+  font-weight: 500;
+}

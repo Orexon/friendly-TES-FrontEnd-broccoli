@@ -1,0 +1,18 @@
+<mat-dialog-content class="centerAlign">
+  <p class="confirmTxt">
+    {{ dialogMessage }}
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions class="dialogBtnContainer">
+  <button mat-stroked-button mat-dialog-close tabindex="-1">
+    {{ cancelBtnTxt }}
+  </button>
+  <button
+    mat-raised-button
+    class="confirmBtn"
+    (click)="onConfirmClick()"
+    tabindex="-1"
+  >
+    {{ confirmBtnTxt }}
+  </button>
+</mat-dialog-actions>

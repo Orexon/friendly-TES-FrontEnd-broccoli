@@ -14,6 +14,8 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/Home/home.component';
 import { LoginComponent } from './components/Login/login.component';
 import { AdminComponent } from './components/Admin/admin.component';
+import { CreateUserDialogComponent } from './components/createUserDialog/create-user-dialog.component';
+import { ConfirmationDialogComponent } from './components/confirmationDialog/confirmation-dialog.component';
 
 //Angular Material.
 import { DemoMaterialModule } from './material-module';
@@ -30,7 +32,14 @@ import { MatSortModule } from '@angular/material/sort';
     AppRoutingModule,
     BrowserAnimationsModule,
   ],
-  declarations: [AppComponent, HomeComponent, LoginComponent, AdminComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    LoginComponent,
+    AdminComponent,
+    CreateUserDialogComponent,
+    ConfirmationDialogComponent,
+  ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
