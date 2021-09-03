@@ -1,0 +1,37 @@
+.testContainer {
+  z-index: 1;
+  width: 90%;
+  margin: auto;
+  transition: 1s all ease;
+}
+
+.newTestHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 44px;
+  margin-bottom: 44px;
+}
+
+.testHeading {
+  font-size: 28px;
+  font-weight: 600;
+  text-shadow: 1px 1px 0px rgba(125, 125, 125, 0.42);
+}
+
+.backnBtn {
+  color: #ffffff;
+  background-color: #2f2e41;
+  align-items: center;
+}
+.testForm {
+  padding: 20px;
+  border: 1px solid #2f2e41;
+  border-radius: 5px;
+}
+.testInput {
+  margin-top: 15px;
+}
+.mat-form-field {
+  width: 100%;
+}

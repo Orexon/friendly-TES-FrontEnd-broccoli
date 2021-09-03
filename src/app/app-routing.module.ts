@@ -6,12 +6,19 @@ import { HomeComponent } from './components/Home/home.component';
 import { AdminComponent } from './components/Admin/admin.component';
 import { LoginComponent } from './components/Login/login.component';
 import { AuthGuard } from './helpers/auth.guard';
+import { TestsComponent } from './components/Tests/tests.component';
+import { NewTestComponent } from './components/Tests/NewTestComponent/newTest.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: '', canActivate: [AuthGuard], component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
-  { path: 'login', component: LoginComponent },
+  { path: 'admin', canActivate: [AuthGuard], component: AdminComponent },
+  { path: 'tests', canActivate: [AuthGuard], component: TestsComponent },
+  {
+    path: 'tests/newTest',
+    canActivate: [AuthGuard],
+    component: NewTestComponent,
+  },
   { path: 'login', component: LoginComponent },
   { path: 'login', component: LoginComponent },
 

@@ -1,0 +1,64 @@
+<section class="testContainer">
+  <div class="newTestHeading">
+    <div class="testHeading">Test creation</div>
+    <button mat-raised-button class="backnBtn" routerLink="/tests">
+      Back to Tests
+    </button>
+  </div>
+
+  <form [formGroup]="testForm" class="testForm" (ngSubmit)="onSubmit()">
+    <div>
+      <mat-form-field>
+        <input
+          type="text"
+          matInput
+          placeholder="Enter Test Name"
+          formControlName="name"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+        />
+        <mat-error *ngIf="f['name'].errors?.required"
+          >name is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="testInput">
+      <mat-form-field>
+        <textarea
+          type="text"
+          placeholder="Enter Test Description."
+          matInput
+          formControlName="description"
+          [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+        >
+        </textarea>
+        <mat-hint
+          >Fill all info about the test, as this description will be displayed
+          before the person starts the test.</mat-hint
+        >
+        <mat-error *ngIf="f['description'].errors?.required"
+          >description is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="testInput">
+      <mat-form-field>
+        <mat-label>Test Type</mat-label>
+        <mat-select
+          placeholder="Select Test Type"
+          formControlName="testType"
+          [ngClass]="{ 'is-invalid': submitted && f.testType.errors }"
+        >
+          <mat-option
+            *ngFor="let enum of TestEnum | keyvalue"
+            [value]="enum.key"
+          >
+            {{ enum.value }} - {{ enum.key }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="f['testType'].errors?.required"
+          >Test Type is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </form>
+</section>

@@ -76,8 +76,8 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      (err: HttpErrorResponse) => {
-        this.displayError(err.message);
+      (err: string) => {
+        this.displayError(err);
         this.loading = false;
       }
     );

@@ -1,12 +1,8 @@
 <section class="userContainer">
   <div class="userHeading">
-    <div class="adminHeading">Admin management</div>
-    <button
-      mat-raised-button
-      class="newAdminBtn"
-      (click)="openEditCreateAdmin()"
-    >
-      New Admin
+    <div class="adminHeading">Tests management</div>
+    <button mat-raised-button class="newAdminBtn" routerLink="/tests/newTest">
+      Create Test
       <mat-icon inline="true">add</mat-icon>
     </button>
   </div>
@@ -16,31 +12,31 @@
   <div class="userTable mat-elevation-z8">
     <mat-spinner *ngIf="loading" [diameter]="20"></mat-spinner>
     <table mat-table matSort matTableResponsive [dataSource]="dataSource">
-      <ng-container matColumnDef="userName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
-        <td mat-cell *matCellDef="let element" data-label="userName">
-          {{ element.userName }}
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Test name</th>
+        <td mat-cell *matCellDef="let element" data-label="name">
+          {{ element.name }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-        <td mat-cell *matCellDef="let element" data-label="email">
-          {{ element.email }}
+      <ng-container matColumnDef="validFrom">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valid From</th>
+        <td mat-cell *matCellDef="let element" data-label="validFrom">
+          {{ element.validFrom }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="firstname">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Firstname</th>
-        <td mat-cell *matCellDef="let element" data-label="firstname">
-          {{ element.firstname }}
+      <ng-container matColumnDef="validTo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valid To</th>
+        <td mat-cell *matCellDef="let element" data-label="validTo">
+          {{ element.validTo }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="lastname">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Lastname</th>
-        <td mat-cell *matCellDef="let element" data-label="lastname">
-          {{ element.lastname }}
+      <ng-container matColumnDef="testlink">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Testlink</th>
+        <td mat-cell *matCellDef="let element" data-label="testlink">
+          {{ element.testlink }}
         </td>
       </ng-container>
 
@@ -51,7 +47,13 @@
             mat-icon-button
             matTooltip="Click to edit"
             [matTooltipPosition]="'left'"
-            (click)="openEditCreateAdmin(element.id)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Click to edit"
+            [matTooltipPosition]="'left'"
           >
             <mat-icon>edit</mat-icon>
           </button>
@@ -59,7 +61,6 @@
             mat-icon-button
             matTooltip="Click to delete"
             [matTooltipPosition]="'right'"
-            (click)="openDeleteModal(element.id)"
           >
             <mat-icon>delete</mat-icon>
           </button>
