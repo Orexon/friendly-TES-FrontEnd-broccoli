@@ -9,6 +9,13 @@ import { AlertModule } from './helpers/alert/alert.module';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 
+//DatetimePicker module
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatTimepickerModule,
+} from '@angular-material-components/datetime-picker';
+import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
+
 //Angular Material.
 import { DemoMaterialModule } from './material-module';
 import { MatSortModule } from '@angular/material/sort';
@@ -33,6 +40,9 @@ import { NewTestComponent } from './components/Tests/NewTestComponent/newTest.co
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatMomentModule,
   ],
   declarations: [
     AppComponent,

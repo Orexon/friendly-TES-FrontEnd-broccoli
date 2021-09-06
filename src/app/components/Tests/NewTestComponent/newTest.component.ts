@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { TestType, StateType } from 'src/app/models/testType';
+import { StateType } from 'src/app/models/testType';
+import * as moment from 'moment';
+import { ValidTime } from 'src/app/helpers/validTime.validator';
+import { DateSelectionModelChange } from '@angular/material/datepicker';
+import { HttpUploadProgressEvent } from '@angular/common/http';
 
 @Component({
   templateUrl: 'newTest.component.html',
@@ -12,34 +16,51 @@ export class NewTestComponent implements OnInit {
   submitted = false;
   loading = false;
   isCreateMode: boolean;
-
-  public stateTypes = Object.values(StateType).filter(
-    (value) => typeof value === 'number'
-  );
+  timeout: NodeJS.Timeout;
+  public minDate: moment.Moment | Date | null;
+  public timeLimit: Date;
 
   public TestEnum = Object.values(StateType).filter(
     (value) => typeof value !== 'number'
   );
 
-  // testType: TestType[] = [
-  //   { value: 0, viewValue: 'C#' },
-  //   { value: 1, viewValue: 'PHP' },
-  //   { value: 2, viewValue: 'Mixed' },
-  // ];
+  @ViewChild('hourInput') public hoursInputRef: ElementRef;
+  @ViewChild('minutesInput') public minutesInputRef: ElementRef;
+
+  @ViewChild('hoursDecrementBtn') public hoursDecrementBtn: ElementRef;
+  @ViewChild('hoursIncrementBtn') public hoursIncrementBtn: ElementRef;
+  @ViewChild('minutesDecrementBtn') public minutesDecrementBtn: ElementRef;
+  @ViewChild('minutesIncrementBtn') public minutesIncrementBtn: ElementRef;
 
   constructor(private formBuilder: FormBuilder) {}
   ngOnInit() {
     // this.id = this.data.userid;
     // this.isCreateMode = !this.id;
-    console.log(this.TestEnum);
     // this.dialogTitle = this.data.dialogTitle;
     // this.confirmBtnTxt = this.data.confirmBtnTxt;
 
-    this.testForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      testType: [Number, Validators.required],
-    });
+    this._setMinDate();
+
+    this.testForm = this.formBuilder.group(
+      {
+        name: ['', Validators.required],
+        description: ['', Validators.required],
+        enumSelect: [null, Validators.required],
+        dateFrom: [null, Validators.required],
+        dateTo: [null, Validators.required],
+        hourInput: [
+          Number,
+          [Validators.required, Validators.min(0), Validators.max(48)],
+        ],
+        minutesInput: [
+          Number,
+          [Validators.required, Validators.min(0), Validators.max(59)],
+        ],
+      },
+      {
+        validator: ValidTime('dateFrom', 'dateTo'),
+      }
+    );
     // if (!this.isCreateMode) {
     //   this.userService
     //     .editAdmin(this.id)
@@ -74,6 +95,12 @@ export class NewTestComponent implements OnInit {
     } else {
       this.editTest();
     }
+  }
+
+  private _setMinDate() {
+    const now = new Date();
+    this.minDate = new Date();
+    this.minDate.setDate(now.getDate());
   }
 
   private createTest() {
@@ -130,4 +157,63 @@ export class NewTestComponent implements OnInit {
     //     },
     //   });
   }
+
+  continuousIncrease(value: string) {
+    if (value === 'hours') {
+      this.increment('hours');
+      this.timeout = setInterval(() => {
+        this.increment('hours');
+      }, 250);
+      return false;
+    } else {
+      this.increment('minutes');
+      this.timeout = setInterval(() => {
+        this.increment('minutes');
+      }, 250);
+      return false;
+    }
+  }
+
+  continuousDecrease(value: string) {
+    if (value === 'hours') {
+      this.decrement('hours');
+      this.timeout = setInterval(() => {
+        this.decrement('hours');
+      }, 250);
+      return false;
+    } else {
+      this.decrement('minutes');
+      this.timeout = setInterval(() => {
+        this.decrement('minutes');
+      }, 250);
+      return false;
+    }
+  }
+
+  clear() {
+    clearInterval(this.timeout);
+    return false;
+  }
+
+  clearleave() {
+    clearInterval(this.timeout);
+    return false;
+  }
+
+  increment(value: string) {
+    if (value === 'hours') {
+      this.hoursInputRef.nativeElement.stepUp();
+    } else {
+      this.minutesInputRef.nativeElement.stepUp(5);
+    }
+  }
+  decrement(value: string) {
+    if (value === 'hours') {
+      this.hoursInputRef.nativeElement.stepDown();
+    } else {
+      this.minutesInputRef.nativeElement.stepDown(5);
+    }
+  }
 }
+
+//add to backend When test has answers. on edit create new test.

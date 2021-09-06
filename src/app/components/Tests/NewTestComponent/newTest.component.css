@@ -29,9 +29,94 @@
   border: 1px solid #2f2e41;
   border-radius: 5px;
 }
+
 .testInput {
   margin-top: 15px;
 }
 .mat-form-field {
   width: 100%;
+}
+
+.timeLimitHeading {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+.centerHeading {
+  text-align: center;
+  color: grey;
+}
+.timeLimitInput {
+  display: flex;
+  justify-content: center;
+}
+
+.doubleDot {
+  margin: 0 10px;
+  font-size: 24px;
+  font-weight: 600;
+  display: flex;
+  align-self: center;
+}
+
+.timeInput {
+  justify-content: center;
+  width: 80px;
+  align-items: center;
+  display: flex;
+}
+.timeInput > div {
+  display: inline-block;
+}
+
+.inputContainer {
+  height: 36px;
+}
+.numberInput {
+  width: 28px;
+  height: 30px;
+  border: 2px solid #616161;
+  border-right: 0;
+  border-radius: 10px 0% 0% 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: rgba(214, 202, 202, 0.411);
+}
+.numberInput:focus {
+  outline: none;
+  border: 2px solid#1565C0;
+  border-right: 0;
+}
+.numberInput.ng-invalid {
+  border: 2px solid #f44336;
+  border-right: 0;
+}
+
+.btnContainer {
+  height: 36px;
+}
+
+.btnContainer .btnbtn {
+  border: 2px solid #2f2e41;
+  display: block;
+  cursor: pointer;
+  height: 18px;
+  background-color: #2f2e41;
+}
+
+.btnContainer .btnbtn:hover {
+  background-color: #1565c0;
+}
+
+.btnContainer .btnbtn:not(:last-child) {
+  border-bottom: none; /* Prevent double borders */
+}
+
+.timeLimitInputErrors {
+  display: flex;
+  justify-content: center;
+}
+.timeLimitInputErrors > mat-error {
+  margin-right: 5px;
 }

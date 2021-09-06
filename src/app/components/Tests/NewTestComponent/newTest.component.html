@@ -15,9 +15,10 @@
           placeholder="Enter Test Name"
           formControlName="name"
           [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+          required
         />
         <mat-error *ngIf="f['name'].errors?.required"
-          >name is required</mat-error
+          >Test name is required</mat-error
         >
       </mat-form-field>
     </div>
@@ -29,6 +30,7 @@
           matInput
           formControlName="description"
           [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
+          required
         >
         </textarea>
         <mat-hint
@@ -36,29 +38,201 @@
           before the person starts the test.</mat-hint
         >
         <mat-error *ngIf="f['description'].errors?.required"
-          >description is required</mat-error
+          >Test description is required</mat-error
         >
       </mat-form-field>
     </div>
     <div class="testInput">
       <mat-form-field>
-        <mat-label>Test Type</mat-label>
         <mat-select
           placeholder="Select Test Type"
-          formControlName="testType"
-          [ngClass]="{ 'is-invalid': submitted && f.testType.errors }"
+          matInput
+          formControlName="enumSelect"
+          [ngClass]="{ 'is-invalid': submitted && f.enumSelect.errors }"
+          required
         >
           <mat-option
             *ngFor="let enum of TestEnum | keyvalue"
             [value]="enum.key"
           >
-            {{ enum.value }} - {{ enum.key }}
+            {{ enum.value }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="f['testType'].errors?.required"
+        <mat-error *ngIf="f['enumSelect'].errors?.required"
           >Test Type is required</mat-error
         >
       </mat-form-field>
     </div>
+    <div class="testInput">
+      <mat-form-field>
+        <input
+          matInput
+          formControlName="dateFrom"
+          [ngxMatDatetimePicker]="picker"
+          [min]="minDate"
+          placeholder="Choose the test starting date and time"
+          [ngClass]="{ 'is-invalid': submitted && f.dateFrom.errors }"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="$any(picker)"
+        ></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #picker>
+          <!-- Custom icon or text of Apply icon -->
+          <ng-template>
+            <!-- <mat-icon>star</mat-icon> -->
+            <span>OK</span>
+          </ng-template>
+        </ngx-mat-datetime-picker>
+        <mat-error *ngIf="f['dateFrom'].errors?.required"
+          >Test starting date & time is required</mat-error
+        >
+        <mat-hint>
+          Starting date must be later than now & can't be later than Ending
+          date.</mat-hint
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="testInput">
+      <mat-form-field>
+        <input
+          matInput
+          formControlName="dateTo"
+          [min]="minDate"
+          [ngxMatDatetimePicker]="picker2"
+          placeholder="Choose the test ending date and time"
+          [ngClass]="{ 'is-invalid': submitted && f.dateTo.errors }"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="$any(picker2)"
+        ></mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #picker2>
+          <!-- Custom icon or text of Apply icon -->
+          <ng-template>
+            <!-- <mat-icon>star</mat-icon> -->
+            <span>OK</span>
+          </ng-template>
+        </ngx-mat-datetime-picker>
+        <mat-error *ngIf="f['dateTo'].errors?.required"
+          >Test ending date & time required</mat-error
+        >
+        <mat-error *ngIf="f.dateTo.errors?.ValidTime"
+          >Test ending date & time must be later than starting date.</mat-error
+        >
+        <mat-hint>
+          Ending date must be later than now & must be later than Starting
+          date.</mat-hint
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="timeLimitHeading">
+      <div class="centerHeading">Enter time limit to complete the test*</div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="testInput timeLimitInput">
+      <div class="timeInput">
+        <div class="inputContainer">
+          <input
+            class="numberInput"
+            type="number"
+            min="0"
+            max="48"
+            [ngClass]="{ 'is-invalid': submitted && f.hourInput.errors }"
+            formControlName="hourInput"
+            #hourInput
+          />
+        </div>
+
+        <div class="btnContainer">
+          <button
+            type="button"
+            class="plusBtn btnbtn"
+            (mousedown)="continuousIncrease('hours')"
+            (mouseup)="clear()"
+            (mouseleave)="clearleave()"
+            #hoursIncrementBtn
+          >
+            <mat-icon class="btnIcon">add</mat-icon>
+          </button>
+          <button
+            type="button"
+            class="minusBtn btnbtn"
+            (mousedown)="continuousDecrease('hours')"
+            (mouseup)="clear()"
+            (mouseleave)="clearleave()"
+            #hoursDecrementBtn
+          >
+            <mat-icon class="btnIcon">remove</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="doubleDot">:</div>
+
+      <div appearance="outline" class="timeInput">
+        <div class="inputContainer">
+          <input
+            class="numberInput"
+            type="number"
+            min="0"
+            max="59"
+            [ngClass]="{ 'is-invalid': submitted && f.minutesInput.errors }"
+            formControlName="minutesInput"
+            #minutesInput
+          />
+        </div>
+
+        <div class="btnContainer">
+          <button
+            type="button"
+            class="plusBtn btnbtn"
+            (mousedown)="continuousIncrease('minutes')"
+            (mouseup)="clear()"
+            (mouseleave)="clearleave()"
+            #minutesIncrementBtn
+          >
+            <mat-icon class="btnIcon">add</mat-icon>
+          </button>
+          <button
+            type="button"
+            class="minusBtn btnbtn"
+            (mousedown)="continuousDecrease('minutes')"
+            (mouseup)="clear()"
+            (mouseleave)="clearleave()"
+            #minutesDecrementBtn
+          >
+            <mat-icon class="btnIcon">remove</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeLimitInputErrors">
+      <mat-error *ngIf="f['hourInput'].errors?.required"
+        >Hours are required.</mat-error
+      >
+      <mat-error *ngIf="f['hourInput'].errors?.min"
+        >Number can't be less than 0.</mat-error
+      >
+      <mat-error *ngIf="f['hourInput'].errors?.max"
+        >Number too big. Maximum hours is 48.</mat-error
+      >
+      <mat-error *ngIf="f['minutesInput'].errors?.required"
+        >Minutes are required.</mat-error
+      >
+      <mat-error *ngIf="f['minutesInput'].errors?.min"
+        >Minutes can't be less than 0.</mat-error
+      >
+      <mat-error *ngIf="f['minutesInput'].errors?.max"
+        >Number too big. Maximum minutes is 59.</mat-error
+      >
+    </div>
+
+    <button type="submit" [disabled]="!testForm.valid">submit</button>
   </form>
 </section>

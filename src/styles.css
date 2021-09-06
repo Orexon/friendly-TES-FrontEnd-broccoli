@@ -11,3 +11,34 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+/* mat-form-field.no-padding .mat-form-field-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+mat-form-field.no-padding .mat-form-field-flex {
+  padding: 0 0 0 0.75em;
+} */
+
+/* mat-form-field.no-padding .mat-form-field-infix {
+  padding: 0;
+  border-top: 0;
+} */
+
+input[type="number"] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+mat-icon.btnIcon {
+  height: 12px !important;
+  width: 12px !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  color: #ffffff;
+}
