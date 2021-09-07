@@ -26,7 +26,7 @@
 }
 .testForm {
   padding: 20px;
-  border: 1px solid #2f2e41;
+  border: 2px solid rgba(0, 0, 0, 0.411);
   border-radius: 5px;
 }
 
@@ -50,7 +50,23 @@
   display: flex;
   justify-content: center;
 }
-
+.timeLimitInputHeadings {
+  width: 155px;
+  display: flex;
+  margin: auto;
+}
+.timeLimitInputHeadings .HoursLabel {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  margin-left: 7px;
+}
+.timeLimitInputHeadings .MinutesLabel {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  margin-left: 62px;
+}
 .doubleDot {
   margin: 0 10px;
   font-size: 24px;
@@ -72,6 +88,7 @@
 .inputContainer {
   height: 36px;
 }
+
 .numberInput {
   width: 28px;
   height: 30px;
@@ -83,11 +100,13 @@
   font-weight: 600;
   background-color: rgba(214, 202, 202, 0.411);
 }
+
 .numberInput:focus {
   outline: none;
   border: 2px solid#1565C0;
   border-right: 0;
 }
+
 .numberInput.ng-invalid {
   border: 2px solid #f44336;
   border-right: 0;
@@ -105,6 +124,13 @@
   background-color: #2f2e41;
 }
 
+.minusBtn {
+  border-radius: 0% 0% 10px 0%;
+}
+.plusBtn {
+  border-radius: 0% 10px 0% 0%;
+}
+
 .btnContainer .btnbtn:hover {
   background-color: #1565c0;
 }
@@ -119,4 +145,34 @@
 }
 .timeLimitInputErrors > mat-error {
   margin-right: 5px;
+}
+
+.questionCard {
+  margin-top: 30px;
+}
+
+.newAdminBtn {
+  color: #ffffff;
+  background-color: #2f2e41;
+  align-items: center;
+}
+
+button.mat-raised-button .mat-icon,
+a.mat-raised-button .mat-icon {
+  vertical-align: top;
+  font-size: 1.5em;
+}
+.deleteQuestionDiv {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+.wopHeading {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+.wopErrors {
+  display: flex;
+  justify-content: center;
 }

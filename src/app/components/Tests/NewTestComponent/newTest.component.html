@@ -6,7 +6,11 @@
     </button>
   </div>
 
-  <form [formGroup]="testForm" class="testForm" (ngSubmit)="onSubmit()">
+  <form
+    [formGroup]="testForm"
+    class="testForm mat-elevation-z2"
+    (ngSubmit)="onSubmit()"
+  >
     <div>
       <mat-form-field>
         <input
@@ -134,7 +138,11 @@
       <div class="centerHeading">Enter time limit to complete the test*</div>
     </div>
     <mat-divider></mat-divider>
-    <div class="testInput timeLimitInput">
+    <div class="testInput timeLimitInputHeadings">
+      <div class="HoursLabel">Hours</div>
+      <div class="MinutesLabel">Minutes</div>
+    </div>
+    <div class="timeLimitInput">
       <div class="timeInput">
         <div class="inputContainer">
           <input
@@ -231,6 +239,141 @@
       <mat-error *ngIf="f['minutesInput'].errors?.max"
         >Number too big. Maximum minutes is 59.</mat-error
       >
+    </div>
+
+    <div class="testInput" formArrayName="questions">
+      <div *ngFor="let questionForm of Questions.controls; let i = index">
+        <mat-card class="questionCard mat-elevation-z4" [formGroupName]="i">
+          <mat-card-title>Question {{ i + 1 }}</mat-card-title>
+          <div>
+            <mat-form-field>
+              <input
+                type="text"
+                matInput
+                placeholder="Enter Question Name"
+                formControlName="questionName"
+                [ngClass]="{ 'is-invalid': submitted && g.questionName.errors }"
+                required
+              />
+              <mat-error *ngIf="g.questionName.errors?.required"
+                >Question name is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div class="testInput">
+            <mat-form-field>
+              <textarea
+                type="text"
+                placeholder="Enter Question Description."
+                matInput
+                formControlName="questionDescription"
+                [ngClass]="{
+                  'is-invalid': submitted && g.questionDescription.errors
+                }"
+                required
+              >
+              </textarea>
+              <mat-hint
+                >Fill all information about the question, as this description
+                will be displayed for a person when he holds the test.</mat-hint
+              >
+              <mat-error *ngIf="g['questionDescription'].errors?.required"
+                >Question description is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div class="testInput">
+            <mat-form-field>
+              <mat-select
+                placeholder="Select Question Type"
+                matInput
+                formControlName="questionType"
+                [ngClass]="{ 'is-invalid': submitted && g.questionType.errors }"
+                required
+              >
+                <mat-option
+                  *ngFor="let enum of QuestionEnum | keyvalue"
+                  [value]="enum.key"
+                >
+                  {{ enum.value }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="g['questionType'].errors?.required"
+                >Test Type is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+          <div class="testInput">
+            <div class="testInput wopHeading">Worth of Points</div>
+            <div class="timeLimitInput">
+              <div class="timeInput">
+                <div class="inputContainer">
+                  <input
+                    class="numberInput"
+                    type="number"
+                    min="1"
+                    max="100"
+                    [ngClass]="{
+                      'is-invalid':
+                        submitted && g['worthOfPoints'].errors?.required
+                    }"
+                    formControlName="worthOfPoints"
+                    #pointsInput
+                  />
+                </div>
+
+                <div class="btnContainer">
+                  <button
+                    type="button"
+                    class="plusBtn btnbtn"
+                    (mousedown)="continuousIncrease('points', i)"
+                    (mouseup)="clear()"
+                    (mouseleave)="clearleave()"
+                    #pointsIncrementBtn
+                  >
+                    <mat-icon class="btnIcon">add</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    class="minusBtn btnbtn"
+                    (mousedown)="continuousDecrease('points', i)"
+                    (mouseup)="clear()"
+                    (mouseleave)="clearleave()"
+                    #pointsDecrementBtn
+                  >
+                    <mat-icon class="btnIcon">remove</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="wopErrors">
+              <mat-error *ngIf="g['worthOfPoints'].errors?.required"
+                >Enter the number how many points the questions is
+                worth.</mat-error
+              >
+              <mat-error *ngIf="g['worthOfPoints'].errors?.min"
+                >The number can't be less than 0.</mat-error
+              >
+              <mat-error *ngIf="g['worthOfPoints'].errors?.max"
+                >Number too big. Maximum worth is 100.</mat-error
+              >
+            </div>
+          </div>
+          <div class="deleteQuestionDiv">
+            <button
+              mat-raised-button
+              class="newAdminBtn"
+              (click)="removeQuestion(i)"
+            >
+              Remove Question {{ i + 1 }}
+              <mat-icon inline="true">delete_forever</mat-icon>
+            </button>
+          </div>
+        </mat-card>
+      </div>
+      <button type="button" (click)="addQuestion()">
+        <mat-icon class="add-course-btn">add</mat-icon>
+      </button>
     </div>
 
     <button type="submit" [disabled]="!testForm.valid">submit</button>
