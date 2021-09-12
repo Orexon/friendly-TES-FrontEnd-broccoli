@@ -71,12 +71,13 @@
       <mat-form-field>
         <input
           matInput
-          formControlName="dateFrom"
           [ngxMatDatetimePicker]="picker"
+          formControlName="dateFrom"
           [min]="minDate"
           placeholder="Choose the test starting date and time"
           [ngClass]="{ 'is-invalid': submitted && f.dateFrom.errors }"
           required
+          name="dateFrom"
         />
         <mat-datepicker-toggle
           matSuffix
@@ -150,6 +151,7 @@
             type="number"
             min="0"
             max="48"
+            step="1"
             [ngClass]="{ 'is-invalid': submitted && f.hourInput.errors }"
             formControlName="hourInput"
             #hourInput
@@ -189,7 +191,9 @@
             type="number"
             min="0"
             max="59"
-            [ngClass]="{ 'is-invalid': submitted && f.minutesInput.errors }"
+            [ngClass]="{
+              'is-invalid': submitted && f.minutesInput.errors
+            }"
             formControlName="minutesInput"
             #minutesInput
           />
@@ -221,7 +225,8 @@
     </div>
 
     <div class="timeLimitInputErrors">
-      <mat-error *ngIf="f['hourInput'].errors?.required"
+      <mat-error
+        *ngIf="f['hourInput'].touched && f['hourInput'].errors?.required"
         >Hours are required.</mat-error
       >
       <mat-error *ngIf="f['hourInput'].errors?.min"
@@ -230,7 +235,8 @@
       <mat-error *ngIf="f['hourInput'].errors?.max"
         >Number too big. Maximum hours is 48.</mat-error
       >
-      <mat-error *ngIf="f['minutesInput'].errors?.required"
+      <mat-error
+        *ngIf="f['hourInput'].touched && f['minutesInput'].errors?.required"
         >Minutes are required.</mat-error
       >
       <mat-error *ngIf="f['minutesInput'].errors?.min"
@@ -252,10 +258,18 @@
                 matInput
                 placeholder="Enter Question Name"
                 formControlName="questionName"
-                [ngClass]="{ 'is-invalid': submitted && g.questionName.errors }"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted &&
+                    this.Questions.controls[i].get('questionName')?.errors
+                }"
                 required
               />
-              <mat-error *ngIf="g.questionName.errors?.required"
+              <mat-error
+                *ngIf="
+                  this.Questions.controls[i].get('questionName')?.errors
+                    ?.required
+                "
                 >Question name is required</mat-error
               >
             </mat-form-field>
@@ -268,7 +282,10 @@
                 matInput
                 formControlName="questionDescription"
                 [ngClass]="{
-                  'is-invalid': submitted && g.questionDescription.errors
+                  'is-invalid':
+                    submitted &&
+                    this.Questions.controls[i].get('questionDescription')
+                      ?.errors
                 }"
                 required
               >
@@ -277,7 +294,11 @@
                 >Fill all information about the question, as this description
                 will be displayed for a person when he holds the test.</mat-hint
               >
-              <mat-error *ngIf="g['questionDescription'].errors?.required"
+              <mat-error
+                *ngIf="
+                  this.Questions.controls[i].get('questionDescription')?.errors
+                    ?.required
+                "
                 >Question description is required</mat-error
               >
             </mat-form-field>
@@ -288,7 +309,11 @@
                 placeholder="Select Question Type"
                 matInput
                 formControlName="questionType"
-                [ngClass]="{ 'is-invalid': submitted && g.questionType.errors }"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted &&
+                    this.Questions.controls[i].get('questionType')?.errors
+                }"
                 required
               >
                 <mat-option
@@ -298,12 +323,21 @@
                   {{ enum.value }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="g['questionType'].errors?.required"
+              <mat-error
+                *ngIf="
+                  this.Questions.controls[i].get('questionType')?.errors
+                    ?.required
+                "
                 >Test Type is required</mat-error
               >
             </mat-form-field>
           </div>
           <div class="testInput">
+            <div class="timeLimitHeading">
+              <div class="centerHeading">
+                Enter how many points the question is worth*
+              </div>
+            </div>
             <div class="testInput wopHeading">Worth of Points</div>
             <div class="timeLimitInput">
               <div class="timeInput">
@@ -315,7 +349,8 @@
                     max="100"
                     [ngClass]="{
                       'is-invalid':
-                        submitted && g['worthOfPoints'].errors?.required
+                        submitted &&
+                        this.Questions.controls[i].get('worthOfPoints')?.errors
                     }"
                     formControlName="worthOfPoints"
                     #pointsInput
@@ -347,17 +382,96 @@
               </div>
             </div>
             <div class="wopErrors">
-              <mat-error *ngIf="g['worthOfPoints'].errors?.required"
+              <mat-error
+                *ngIf="
+                  this.Questions.controls[i].get('worthOfPoints')?.touched &&
+                  this.Questions.controls[i].get('worthOfPoints')?.errors
+                    ?.required
+                "
                 >Enter the number how many points the questions is
                 worth.</mat-error
               >
-              <mat-error *ngIf="g['worthOfPoints'].errors?.min"
+              <mat-error
+                *ngIf="
+                  this.Questions.controls[i].get('worthOfPoints')?.errors?.min
+                "
                 >The number can't be less than 0.</mat-error
               >
-              <mat-error *ngIf="g['worthOfPoints'].errors?.max"
+              <mat-error
+                *ngIf="
+                  this.Questions.controls[i].get('worthOfPoints')?.errors?.max
+                "
                 >Number too big. Maximum worth is 100.</mat-error
               >
             </div>
+          </div>
+          <div class="testInput">
+            <mat-form-field>
+              <ngx-mat-file-input
+                formControlName="SubmittedSolution"
+                type="file"
+                (change)="onSelectFile($event, i)"
+                [accept]="accept"
+                name="SubmittedSolution"
+                [ngClass]="{
+                  'is-invalid':
+                    this.Questions.controls[i].get('SubmittedSolution')
+                      ?.dirty &&
+                    this.Questions.controls[i].get('SubmittedSolution')?.invalid
+                }"
+              >
+                <mat-icon ngxMatFileInputIcon>folder</mat-icon>
+              </ngx-mat-file-input>
+            </mat-form-field>
+            <mat-error
+              *ngIf="
+                this.Questions.controls[i].get('SubmittedSolution')?.dirty &&
+                this.Questions.controls[i].get('SubmittedSolution')?.errors
+                  ?.required
+              "
+              >Please submit a solution.</mat-error
+            >
+            <mat-error
+              *ngIf="
+                this.Questions.controls[i].get('SubmittedSolution')?.errors
+                  ?.requiredFileType
+              "
+              >Submitted solution has to be of the required file
+              type.</mat-error
+            >
+            <!-- <input
+              #fileInput
+              hidden="true"
+              type="file"
+              (change)="uploadFile($event)"
+              accept=".txt"
+              formControlName="submittedSolution"
+              required
+            />
+            <button
+              type="button"
+              mat-flat-button
+              color="primary"
+              (click)="fileInput.click()"
+            >
+              Choose txt File
+            </button>
+            <mat-error
+              *ngIf="
+                this.Questions.controls[i].get('submittedSolution')?.dirty &&
+                this.Questions.controls[i].get('submittedSolution')?.errors
+                  ?.required
+              "
+              >Please submit a solution.</mat-error
+            >
+            <mat-error
+              *ngIf="
+                this.Questions.controls[i].get('submittedSolution')?.errors
+                  ?.requiredFileType
+              "
+              >Submitted solution has to be of the required file
+              type.</mat-error
+            > -->
           </div>
           <div class="deleteQuestionDiv">
             <button

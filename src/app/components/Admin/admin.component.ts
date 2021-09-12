@@ -129,7 +129,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .subscribe((response: { success: boolean; msg: string }) => {
-        console.log(response);
         if (response.success) {
           this.refresh();
           this.alertService.success(response.msg);

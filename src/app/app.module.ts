@@ -13,9 +13,11 @@ import { ErrorInterceptor } from './helpers/error.interceptor';
 import {
   NgxMatDatetimePickerModule,
   NgxMatTimepickerModule,
+  NgxMatNativeDateModule,
 } from '@angular-material-components/datetime-picker';
-import { NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 
+//FileUpload module
+import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 //Angular Material.
 import { DemoMaterialModule } from './material-module';
 import { MatSortModule } from '@angular/material/sort';
@@ -42,7 +44,8 @@ import { NewTestComponent } from './components/Tests/NewTestComponent/newTest.co
     BrowserAnimationsModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
-    NgxMatMomentModule,
+    NgxMatNativeDateModule,
+    NgxMatFileInputModule,
   ],
   declarations: [
     AppComponent,

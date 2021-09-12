@@ -2,10 +2,10 @@ import { Guid } from 'guid-typescript';
 import { QuestionType } from './questionType';
 
 export class Question {
-  id: Guid;
+  id?: Guid;
   name: string;
   description: string;
   questionType: QuestionType;
-  SolutionFilePath: string;
+  SubmittedSolution: File;
   worthOfPoints: number;
 }

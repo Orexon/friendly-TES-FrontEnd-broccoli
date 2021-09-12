@@ -42,26 +42,24 @@ export class CreateUserDialogComponent implements OnInit {
     this.dialogTitle = this.data.dialogTitle;
     this.confirmBtnTxt = this.data.confirmBtnTxt;
 
-    this.adminForm = this.formBuilder.group(
-      {
-        username: ['', Validators.required],
-        firstname: ['', [Validators.required, Validators.maxLength(50)]],
-        lastname: ['', [Validators.required, Validators.maxLength(50)]],
-        email: ['', [Validators.required, Validators.email]],
-        password: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(30),
-          ],
+    this.adminForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      firstname: ['', [Validators.required, Validators.maxLength(50)]],
+      lastname: ['', [Validators.required, Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(30),
         ],
-        confirmPassword: ['', Validators.required],
-      },
-      {
-        validator: MustMatch('password', 'confirmPassword'),
-      }
-    );
+      ],
+      confirmPassword: [
+        '',
+        [Validators.required, MustMatch('password', 'confirmPassword')],
+      ],
+    });
 
     if (!this.isCreateMode) {
       this.userService
