@@ -1,10 +1,14 @@
 <section class="testContainer">
   <div class="newTestHeading">
-    <div class="testHeading">Test creation</div>
+    <div class="testHeading" *ngIf="isCreateMode">Test creation</div>
+    <div class="testHeading" *ngIf="!isCreateMode">Edit test</div>
+
     <button mat-raised-button class="backnBtn" routerLink="/tests">
       Back to Tests
     </button>
   </div>
+
+  <alert></alert>
 
   <form
     [formGroup]="testForm"
@@ -70,12 +74,14 @@
     <div class="testInput">
       <mat-form-field>
         <input
+          autocomplete="off"
           matInput
           [ngxMatDatetimePicker]="picker"
           formControlName="dateFrom"
           [min]="minDate"
           placeholder="Choose the test starting date and time"
           [ngClass]="{ 'is-invalid': submitted && f.dateFrom.errors }"
+          (focus)="picker.open()"
           required
           name="dateFrom"
         />
@@ -104,11 +110,13 @@
       <mat-form-field>
         <input
           matInput
+          autocomplete="off"
           formControlName="dateTo"
           [min]="minDate"
           [ngxMatDatetimePicker]="picker2"
           placeholder="Choose the test ending date and time"
           [ngClass]="{ 'is-invalid': submitted && f.dateTo.errors }"
+          (focus)="picker2.open()"
           required
         />
         <mat-datepicker-toggle
@@ -439,39 +447,6 @@
               >Submitted solution has to be of the required file
               type.</mat-error
             >
-            <!-- <input
-              #fileInput
-              hidden="true"
-              type="file"
-              (change)="uploadFile($event)"
-              accept=".txt"
-              formControlName="submittedSolution"
-              required
-            />
-            <button
-              type="button"
-              mat-flat-button
-              color="primary"
-              (click)="fileInput.click()"
-            >
-              Choose txt File
-            </button>
-            <mat-error
-              *ngIf="
-                this.Questions.controls[i].get('submittedSolution')?.dirty &&
-                this.Questions.controls[i].get('submittedSolution')?.errors
-                  ?.required
-              "
-              >Please submit a solution.</mat-error
-            >
-            <mat-error
-              *ngIf="
-                this.Questions.controls[i].get('submittedSolution')?.errors
-                  ?.requiredFileType
-              "
-              >Submitted solution has to be of the required file
-              type.</mat-error
-            > -->
           </div>
           <div class="deleteQuestionDiv">
             <button
@@ -485,11 +460,30 @@
           </div>
         </mat-card>
       </div>
-      <button type="button" (click)="addQuestion()">
-        <mat-icon class="add-course-btn">add</mat-icon>
-      </button>
-    </div>
 
-    <button type="submit" [disabled]="!testForm.valid">submit</button>
+      <div class="AddSubmitContainer">
+        <div>
+          <button
+            mat-raised-button
+            class="addQBtn"
+            type="button"
+            (click)="addQuestion()"
+          >
+            Add question
+            <mat-icon inline="true" class="add-course-btn">add</mat-icon>
+          </button>
+        </div>
+        <div>
+          <button
+            type="submit"
+            mat-raised-button
+            class="addQBtn"
+            [disabled]="!testForm.valid"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
   </form>
 </section>

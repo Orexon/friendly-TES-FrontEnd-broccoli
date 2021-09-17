@@ -19,7 +19,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: NewTestComponent,
   },
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'tests/editTest/:id',
+    canActivate: [AuthGuard],
+    component: NewTestComponent,
+  },
   { path: 'login', component: LoginComponent },
 
   // otherwise redirect to home

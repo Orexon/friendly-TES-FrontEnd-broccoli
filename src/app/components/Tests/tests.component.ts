@@ -7,12 +7,14 @@ import { User } from '../../models/user';
 import { Subscription } from 'rxjs';
 import { AlertService } from '../../helpers/alert/alert.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { CreateUserDialogComponent } from '../createUserDialog/create-user-dialog.component';
 import { Guid } from 'guid-typescript';
 import { ConfirmationDialogComponent } from '../confirmationDialog/confirmation-dialog.component';
 import { first } from 'rxjs/operators';
 import { Test } from 'src/app/models/test';
 import { TestService } from 'src/app/services/tests.service';
+import { TestInfoDialogComponent } from './TestInfoDialogComponent/test-info-dialog.component';
+import { Router } from '@angular/router';
+import { calculteTimeLimit } from 'src/app/helpers/timeLimitCalc';
 
 @Component({
   templateUrl: 'tests.component.html',
@@ -25,6 +27,8 @@ export class TestsComponent implements OnInit, OnDestroy {
   confirmBtnTxt: string;
   cancelBtnTxt: string;
   loading: boolean = false;
+  testInfo: Test;
+
   response: {
     success: boolean;
     msg: string;
@@ -47,7 +51,8 @@ export class TestsComponent implements OnInit, OnDestroy {
   constructor(
     private testService: TestService,
     private alertService: AlertService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -77,6 +82,7 @@ export class TestsComponent implements OnInit, OnDestroy {
         this.dataSource = new MatTableDataSource(this.dataArray);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        console.log(res);
       },
       (err: HttpErrorResponse) => {
         this.displayError(err.message);
@@ -94,5 +100,82 @@ export class TestsComponent implements OnInit, OnDestroy {
       this.subs.unsubscribe();
       this.alertService.clear();
     }
+  }
+
+  openTestInfo(id: Guid) {
+    this.alertService.clear();
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = false;
+    dialogConfig.maxWidth = '60vw';
+
+    this.testService.getTest(id).subscribe(
+      (res) => {
+        this.loading = false;
+        this.testInfo = res;
+        console.log(res);
+
+        dialogConfig.data = {
+          dialogTitle: 'Test "' + this.testInfo.name + '" information',
+          description: this.testInfo.description,
+          questions: this.testInfo.questions,
+          testType: this.testInfo.testType,
+          createTime: this.testInfo.createTime,
+          validFrom: this.testInfo.validFrom,
+          validTo: this.testInfo.validTo,
+          timeLimit: calculteTimeLimit(this.testInfo.timeLimit),
+          testLink: this.testInfo.urlLinkId,
+        };
+
+        let dialogRef = this.matDialog.open(
+          TestInfoDialogComponent,
+          dialogConfig
+        );
+      },
+      (err: HttpErrorResponse) => {
+        this.displayError(err.message);
+        this.loading = false;
+      }
+    );
+  }
+
+  editTest(id: Guid) {
+    this.router.navigate(['/tests/editTest', id]);
+  }
+  openDeleteModal(id: Guid) {
+    this.alertService.clear();
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = false;
+    dialogConfig.minWidth = 300;
+
+    dialogConfig.data = {
+      dialogMessage: 'Are you sure?',
+      confirmBtnTxt: 'Yes',
+      cancelBtnTxt: 'Cancel',
+    };
+
+    let dialogRef = this.matDialog.open(
+      ConfirmationDialogComponent,
+      dialogConfig
+    );
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.testService
+          .deleteTest(id)
+          .pipe(first())
+          .subscribe({
+            next: () => {
+              this.refresh();
+              this.alertService.success('Test has been deleted successfully');
+            },
+            error: (error) => {
+              this.alertService.error(error);
+              this.loading = false;
+            },
+          });
+      }
+    });
   }
 }

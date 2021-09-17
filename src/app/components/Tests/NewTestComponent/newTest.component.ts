@@ -3,7 +3,6 @@ import {
   ElementRef,
   OnInit,
   QueryList,
-  Renderer2,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -23,8 +22,10 @@ import { Guid } from 'guid-typescript';
 import { TestService } from 'src/app/services/tests.service';
 import { AlertService } from 'src/app/helpers/alert/alert.service';
 import { NewTest } from 'src/app/models/newTest';
-import { Question } from 'src/app/models/question';
-import { TimeSpan } from 'src/app/models/timeLimit';
+import { NewQuestion } from 'src/app/models/question';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { calculteTimeLimit } from 'src/app/helpers/timeLimitCalc';
 
 @Component({
   templateUrl: 'newTest.component.html',
@@ -42,11 +43,14 @@ export class NewTestComponent implements OnInit {
   accept: string = '.txt';
   testId: Guid;
   newTest: NewTest;
-  timeLimit: TimeSpan;
-  selectedFiles: File[] = [];
-  selectedFile: File;
-  newQuestions: Question[] = [];
-  newQuestion: Question;
+  timeLimit: number;
+  timeLimitObj: {
+    days: number;
+    hours: number;
+    mins: number;
+  };
+  newQuestions: NewQuestion[] = [];
+  newQuestion: NewQuestion;
   public minDate: Date;
 
   public TestEnum = Object.values(StateType).filter(
@@ -75,10 +79,18 @@ export class NewTestComponent implements OnInit {
     private formBuilder: FormBuilder,
     private testService: TestService,
     private alertService: AlertService,
-    private renderer: Renderer2
+    private router: Router,
+    private activatedroute: ActivatedRoute
   ) {}
   ngOnInit() {
-    this.isCreateMode = !this.testId;
+    if (this.router.url === '/tests/newTest') {
+      this.isCreateMode = true;
+    } else {
+      this.isCreateMode = false;
+      this.testId = Guid.parse(
+        this.activatedroute.snapshot.paramMap.get('id')!
+      );
+    }
 
     this._setMinDate();
 
@@ -99,7 +111,7 @@ export class NewTestComponent implements OnInit {
           Validators.min(0),
           Validators.max(59),
         ]),
-        questions: this.formBuilder.array([]),
+        questions: this.formBuilder.array([], Validators.required),
       },
       {
         validator: ValidTime('dateFrom', 'dateTo'),
@@ -108,20 +120,24 @@ export class NewTestComponent implements OnInit {
         //   //add custom validator for file checking.
       }
     );
-    // if (!this.isCreateMode) {
-    //   this.userService
-    //     .editAdmin(this.id)
-    //     .pipe(first())
-    //     .subscribe((x) =>
-    //       this.adminForm.patchValue({
-    //         username: x.username,
-    //         email: x.email,
-    //         firstname: x.firstname,
-    //         lastname: x.lastname,
-    //         id: x.id,
-    //       })
-    //     );
-    // }
+
+    if (!this.isCreateMode) {
+      this.testService
+        .getTest(this.testId)
+        .pipe(first())
+        .subscribe((x) =>
+          this.testForm.patchValue({
+            name: x.name,
+            description: x.description,
+            enumSelect: x.testType,
+            dateFrom: x.validFrom,
+            dateTo: x.validTo,
+            hourInput: calculteTimeLimit(x.timeLimit).totalHours,
+            minutesInput: calculteTimeLimit(x.timeLimit).mins,
+            Questions: x.questions,
+          })
+        );
+    }
   }
 
   // convenience getters for easy access to form fields
@@ -189,8 +205,6 @@ export class NewTestComponent implements OnInit {
   }
 
   private createTest() {
-    this.timeLimitConvert();
-
     for (let i = 0; i < this.Questions?.controls.length; i++) {
       this.newQuestion = {
         name: this.Questions?.controls[i].get('questionName')?.value,
@@ -211,14 +225,17 @@ export class NewTestComponent implements OnInit {
       testType: this.f.enumSelect.value,
       validFrom: this.dateFromValue,
       validTo: this.dateToValue,
-      timeLimit: this.timeLimit,
+      timeLimit: this.f.hourInput.value * 60 + this.f.minutesInput.value,
     };
+
+    console.log(object.timeLimit);
 
     const options = {
       indices: true,
     };
 
     const fd = this.objectToFormData(object, options);
+    // after error display error on same page.
 
     this.testService
       .createTest(fd)
@@ -226,6 +243,7 @@ export class NewTestComponent implements OnInit {
       .subscribe({
         next: () => {
           this.alertService.success('Test Created');
+          this.router.navigate(['/tests']);
         },
         error: (error) => {
           this.displayError(error.message);
@@ -266,35 +284,7 @@ export class NewTestComponent implements OnInit {
     //   });
   }
 
-  timeLimitConvert() {
-    this.timeLimit = new TimeSpan();
-    if (this.f.hourInput.value > 24) {
-      let remainder = this.f.hourInput.value % 24;
-      if (remainder === 0) {
-        this.timeLimit.days = 2;
-      } else {
-        this.timeLimit.days = 1;
-        this.timeLimit.hours = remainder;
-      }
-    } else if (this.f.hourInput.value === 24) {
-      this.timeLimit.days = 1;
-    } else {
-      this.timeLimit.days = 0;
-      this.timeLimit.hours = this.f.hourInput.value;
-    }
-
-    this.timeLimit.minutes = this.f.minutesInput.value;
-    this.timeLimit.milliseconds = 0;
-
-    this.timeLimit.totalDays = this.timeLimit.days;
-    this.timeLimit.totalMinutes =
-      this.f.hourInput.value * 60 + this.f.minutesInput.value;
-    this.timeLimit.totalHours = this.timeLimit.totalMinutes / 60;
-    this.timeLimit.totalSeconds = this.timeLimit.totalMinutes * 60;
-    this.timeLimit.totalMilliseconds = this.timeLimit.totalSeconds * 1000;
-    this.timeLimit.ticks = this.timeLimit.totalMilliseconds * 10000;
-  }
-
+  //test here
   private displayError(message: string) {
     this.alertService.error(message, { autoClose: false });
   }

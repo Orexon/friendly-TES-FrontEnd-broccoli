@@ -34,9 +34,9 @@
       </ng-container>
 
       <ng-container matColumnDef="testlink">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Testlink</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>TestlinkId</th>
         <td mat-cell *matCellDef="let element" data-label="testlink">
-          {{ element.testlink }}
+          {{ element.urlLinkId.id }}
         </td>
       </ng-container>
 
@@ -45,14 +45,16 @@
         <td mat-cell *matCellDef="let element" data-label="actions">
           <button
             mat-icon-button
-            matTooltip="Click to edit"
+            matTooltip="Click for test details"
             [matTooltipPosition]="'left'"
+            (click)="openTestInfo(element.id)"
           >
-            <mat-icon>edit</mat-icon>
+            <mat-icon>info</mat-icon>
           </button>
           <button
             mat-icon-button
             matTooltip="Click to edit"
+            (click)="editTest(element.id)"
             [matTooltipPosition]="'left'"
           >
             <mat-icon>edit</mat-icon>
@@ -61,6 +63,7 @@
             mat-icon-button
             matTooltip="Click to delete"
             [matTooltipPosition]="'right'"
+            (click)="openDeleteModal(element.id)"
           >
             <mat-icon>delete</mat-icon>
           </button>

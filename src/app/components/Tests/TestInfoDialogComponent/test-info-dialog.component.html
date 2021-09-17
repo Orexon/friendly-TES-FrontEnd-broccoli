@@ -1,0 +1,97 @@
+<h2 mat-dialog-title>{{ this.dialogTitle }}</h2>
+<mat-dialog-content class="mat-typography" class="infoCard">
+  <div class="fcontainer">
+    <div>
+      <h3 class="Title">Test description</h3>
+      <h3 class="info">
+        {{ this.description }}
+      </h3>
+    </div>
+
+    <div class="fitem-container">
+      <h3 class="Title">Test type:&nbsp;</h3>
+      <h3>
+        {{ this.testType }}
+      </h3>
+    </div>
+
+    <div class="fitem-container">
+      <h3 class="Title">Test create time:&nbsp;</h3>
+      <h3>{{ this.createTime }}</h3>
+    </div>
+
+    <div class="fitem-container">
+      <h3 class="Title">Test validity period:&nbsp;</h3>
+      <div class="fitem-container">
+        <h3 class="Title">From:&nbsp;</h3>
+        <h3>{{ this.validFrom }}&nbsp;</h3>
+      </div>
+      <div class="fitem-container">
+        <h3 class="Title">To:&nbsp;</h3>
+        <h3>{{ this.validTo }}</h3>
+      </div>
+    </div>
+
+    <div class="fitem-container">
+      <h3 class="Title">Test timelimit:&nbsp;</h3>
+      <h3>
+        Days:&nbsp;{{ this.timeLimit.days }}, Hours:&nbsp;{{
+          this.timeLimit.hours
+        }}, Minutes:&nbsp;{{ this.timeLimit.mins }}
+      </h3>
+    </div>
+
+    <div class="fitem-container">
+      <h3 class="Title">Link to the test:&nbsp;</h3>
+      <h3>{{ this.urlLinkId }}</h3>
+    </div>
+  </div>
+
+  <div *ngFor="let question of this.questions; let i = index">
+    <mat-card class="questionCard mat-elevation-z4">
+      <mat-card-title
+        >Question{{ i + 1 }}:&nbsp;"{{
+          this.questions[i].name
+        }}"</mat-card-title
+      >
+      <div class="fcontainer">
+        <div class="fitem-container">
+          <h3 class="Title">Description:&nbsp;</h3>
+          <h3>
+            {{ this.questions[i].description }}
+          </h3>
+        </div>
+
+        <div class="fitem-container">
+          <h3 class="Title">Question type:&nbsp;</h3>
+          <h3>
+            {{ this.checkType(this.questions[i].questionType) }}
+          </h3>
+        </div>
+
+        <div class="fitem-container">
+          <h3 class="Title">Question points worth:&nbsp;</h3>
+          <h3>
+            {{ this.questions[i].worthOfPoints }}
+          </h3>
+        </div>
+
+        <div class="fitem-container">
+          <button
+            mat-raised-button
+            class="GlobalDarkBtn"
+            (click)="download(getPath(i))"
+          >
+            Download Solution
+            <mat-icon inline="true">file_download</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button class="GlobalDarkBtn" mat-dialog-close>
+    Cancel
+  </button>
+</mat-dialog-actions>

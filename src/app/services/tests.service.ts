@@ -17,6 +17,10 @@ export class TestService {
     return this.http.get<Test[]>(`${environment.apiUrl}/Test/getAllTests`);
   }
 
+  getTest(id: Guid): Observable<Test> {
+    return this.http.get<Test>(`${environment.apiUrl}/Test/getTest/${id}`);
+  }
+
   createTest(data: any) {
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
@@ -28,5 +32,9 @@ export class TestService {
         headers: headers,
       }
     );
+  }
+
+  deleteTest(id: Guid) {
+    return this.http.delete(`${environment.apiUrl}/Test/deleteTest/${id}`);
   }
 }

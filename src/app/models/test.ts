@@ -12,6 +12,6 @@ export class Test {
   createTime: Date;
   validFrom: Date;
   validTo: Date;
-  timeSpan: number;
-  testLink: TestLink;
+  timeLimit: BigInt;
+  urlLinkId: TestLink;
 }

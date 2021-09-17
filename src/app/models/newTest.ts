@@ -1,13 +1,12 @@
-import { Question } from './question';
+import { NewQuestion } from './question';
 import { StateType } from './testType';
-import { TimeSpan } from './timeLimit';
 
 export class NewTest {
   name: string;
   description: string;
-  questions: Question[];
+  questions: NewQuestion[];
   testType: StateType;
   validFrom: Date;
   validTo: Date;
-  timeLimit: TimeSpan;
+  timeLimit: {};
 }
