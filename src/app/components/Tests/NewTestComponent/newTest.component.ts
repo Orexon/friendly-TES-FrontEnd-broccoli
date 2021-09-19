@@ -26,6 +26,10 @@ import { NewQuestion } from 'src/app/models/question';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { calculteTimeLimit } from 'src/app/helpers/timeLimitCalc';
+import { objectToFormData } from 'src/app/helpers/objectToFormData';
+import { DownloadService } from 'src/app/services/download.service';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   templateUrl: 'newTest.component.html',
@@ -51,6 +55,8 @@ export class NewTestComponent implements OnInit {
   };
   newQuestions: NewQuestion[] = [];
   newQuestion: NewQuestion;
+  selectedOption: string | StateType;
+  solutionPaths: Array<string> = [];
   public minDate: Date;
 
   public TestEnum = Object.values(StateType).filter(
@@ -80,7 +86,8 @@ export class NewTestComponent implements OnInit {
     private testService: TestService,
     private alertService: AlertService,
     private router: Router,
-    private activatedroute: ActivatedRoute
+    private activatedroute: ActivatedRoute,
+    private downloads: DownloadService
   ) {}
   ngOnInit() {
     if (this.router.url === '/tests/newTest') {
@@ -123,7 +130,7 @@ export class NewTestComponent implements OnInit {
 
     if (!this.isCreateMode) {
       this.testService
-        .getTest(this.testId)
+        .getEditTest(this.testId)
         .pipe(first())
         .subscribe((x) =>
           this.testForm.patchValue({
@@ -134,10 +141,32 @@ export class NewTestComponent implements OnInit {
             dateTo: x.validTo,
             hourInput: calculteTimeLimit(x.timeLimit).totalHours,
             minutesInput: calculteTimeLimit(x.timeLimit).mins,
-            Questions: x.questions,
+            Questions: x.questions.forEach((element) => {
+              this.addQuestion();
+              this.questionForm.patchValue({
+                questionName: element.name,
+                questionDescription: element.description,
+                questionType: element.questionType,
+                worthOfPoints: element.worthOfPoints,
+              });
+              this.addFilePath(element.solutionFilePath);
+            }),
           })
         );
     }
+  }
+
+  compareFunction(o1: any, o2: any) {
+    return o1 == o2; //works without type error.
+    //return o1.key == o2.key && o1.value == o2.value; works with Null type error/warning.
+  }
+
+  getPath(num: number) {
+    return this.solutionPaths[num];
+  }
+
+  addFilePath(path: string) {
+    this.solutionPaths.push(path);
   }
 
   // convenience getters for easy access to form fields
@@ -150,10 +179,31 @@ export class NewTestComponent implements OnInit {
   }
 
   get dateFromValue() {
-    return this.testForm.controls['dateFrom'].value;
+    var localDate = this.testForm.controls['dateFrom'].value;
+    return new Date(
+      Date.UTC(
+        localDate.getFullYear(),
+        localDate.getMonth(),
+        localDate.getDate(),
+        localDate.getHours(),
+        localDate.getMinutes(),
+        localDate.getSeconds()
+      )
+    );
   }
+
   get dateToValue() {
-    return this.testForm.controls['dateTo'].value;
+    var localDateTo = this.testForm.controls['dateTo'].value;
+    return new Date(
+      Date.UTC(
+        localDateTo.getFullYear(),
+        localDateTo.getMonth(),
+        localDateTo.getDate(),
+        localDateTo.getHours(),
+        localDateTo.getMinutes(),
+        localDateTo.getSeconds()
+      )
+    );
   }
 
   get Questions() {
@@ -228,13 +278,11 @@ export class NewTestComponent implements OnInit {
       timeLimit: this.f.hourInput.value * 60 + this.f.minutesInput.value,
     };
 
-    console.log(object.timeLimit);
-
     const options = {
       indices: true,
     };
 
-    const fd = this.objectToFormData(object, options);
+    const fd = objectToFormData(object, options);
     // after error display error on same page.
 
     this.testService
@@ -246,7 +294,7 @@ export class NewTestComponent implements OnInit {
           this.router.navigate(['/tests']);
         },
         error: (error) => {
-          this.displayError(error.message);
+          this.displayError(error);
           this.loading = false;
         },
       });
@@ -384,91 +432,18 @@ export class NewTestComponent implements OnInit {
     }
   }
 
-  isUndefined = (value: any) => value === undefined;
-
-  isNull = (value: any) => value === null;
-
-  isBoolean = (value: any) => typeof value === 'boolean';
-
-  isObject = (value: any) => value === Object(value);
-
-  isArray = (value: any) => Array.isArray(value);
-
-  isDate = (value: any) => value instanceof Date;
-
-  isBlob = (value: any) =>
-    value &&
-    typeof value.size === 'number' &&
-    typeof value.type === 'string' &&
-    typeof value.slice === 'function';
-
-  isFile = (value: any) =>
-    this.isBlob(value) &&
-    typeof value.name === 'string' &&
-    (typeof value.lastModifiedDate === 'object' ||
-      typeof value.lastModified === 'number');
-
-  objectToFormData = (obj: any, cfg?: any, fd?: any, pre?: any) => {
-    cfg = cfg || {};
-
-    cfg.indices = this.isUndefined(cfg.indices) ? false : cfg.indices;
-
-    cfg.nullsAsUndefineds = this.isUndefined(cfg.nullsAsUndefineds)
-      ? false
-      : cfg.nullsAsUndefineds;
-
-    cfg.booleansAsIntegers = this.isUndefined(cfg.booleansAsIntegers)
-      ? false
-      : cfg.booleansAsIntegers;
-
-    fd = fd || new FormData();
-
-    if (this.isUndefined(obj)) {
-      return fd;
-    } else if (this.isNull(obj)) {
-      if (!cfg.nullsAsUndefineds) {
-        fd.append(pre, '');
-      }
-    } else if (this.isBoolean(obj)) {
-      if (cfg.booleansAsIntegers) {
-        fd.append(pre, obj ? 1 : 0);
-      } else {
-        fd.append(pre, obj);
-      }
-    } else if (this.isArray(obj)) {
-      if (obj.length) {
-        obj.forEach((value: any, index: any) => {
-          const key = pre + '[' + (cfg.indices ? index : '') + ']';
-
-          this.objectToFormData(value, cfg, fd, key);
-        });
-      }
-    } else if (this.isDate(obj)) {
-      fd.append(pre, obj.toISOString());
-    } else if (this.isObject(obj) && !this.isFile(obj) && !this.isBlob(obj)) {
-      Object.keys(obj).forEach((prop) => {
-        const value = obj[prop];
-
-        if (this.isArray(value)) {
-          while (
-            prop.length > 2 &&
-            prop.lastIndexOf('[]') === prop.length - 2
-          ) {
-            prop = prop.substring(0, prop.length - 2);
-          }
-        }
-        const key = pre ? pre + '.' + prop : prop;
-
-        this.objectToFormData(value, cfg, fd, key);
-      });
-    } else {
-      fd.append(pre, obj);
-    }
-
-    return fd;
-  };
+  download(path: string): void {
+    this.downloads.download(path).subscribe((blob) => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = 'Solution';
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+    });
+  }
 }
 
 // Validation for hours, both values can't be 0;
 // update value when add/minus buttons - currently errors not changing after input.
-// add to backend When test has answers. on edit create new test.
+// add to backend When test has answers. on edit create new test;

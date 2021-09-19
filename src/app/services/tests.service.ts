@@ -21,6 +21,10 @@ export class TestService {
     return this.http.get<Test>(`${environment.apiUrl}/Test/getTest/${id}`);
   }
 
+  getEditTest(id: Guid): Observable<Test> {
+    return this.http.get<Test>(`${environment.apiUrl}/Test/editTest/${id}`);
+  }
+
   createTest(data: any) {
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');

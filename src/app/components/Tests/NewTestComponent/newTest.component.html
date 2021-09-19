@@ -58,6 +58,7 @@
           formControlName="enumSelect"
           [ngClass]="{ 'is-invalid': submitted && f.enumSelect.errors }"
           required
+          [compareWith]="compareFunction"
         >
           <mat-option
             *ngFor="let enum of TestEnum | keyvalue"
@@ -323,6 +324,7 @@
                     this.Questions.controls[i].get('questionType')?.errors
                 }"
                 required
+                [compareWith]="compareFunction"
               >
                 <mat-option
                   *ngFor="let enum of QuestionEnum | keyvalue"
@@ -431,6 +433,17 @@
                 <mat-icon ngxMatFileInputIcon>folder</mat-icon>
               </ngx-mat-file-input>
             </mat-form-field>
+
+            <button
+              mat-raised-button
+              class="GlobalDarkBtn"
+              (click)="download(getPath(i))"
+              *ngIf="!isCreateMode"
+            >
+              Download Solution
+              <mat-icon inline="true">file_download</mat-icon>
+            </button>
+
             <mat-error
               *ngIf="
                 this.Questions.controls[i].get('SubmittedSolution')?.dirty &&

@@ -28,7 +28,7 @@ export class TestsComponent implements OnInit, OnDestroy {
   cancelBtnTxt: string;
   loading: boolean = false;
   testInfo: Test;
-
+  testData: Test;
   response: {
     success: boolean;
     msg: string;
@@ -84,8 +84,8 @@ export class TestsComponent implements OnInit, OnDestroy {
         this.dataSource.sort = this.sort;
         console.log(res);
       },
-      (err: HttpErrorResponse) => {
-        this.displayError(err.message);
+      (err: string) => {
+        this.displayError(err);
         this.loading = false;
       }
     );
@@ -113,7 +113,6 @@ export class TestsComponent implements OnInit, OnDestroy {
       (res) => {
         this.loading = false;
         this.testInfo = res;
-        console.log(res);
 
         dialogConfig.data = {
           dialogTitle: 'Test "' + this.testInfo.name + '" information',
@@ -132,16 +131,25 @@ export class TestsComponent implements OnInit, OnDestroy {
           dialogConfig
         );
       },
-      (err: HttpErrorResponse) => {
-        this.displayError(err.message);
+      (err: string) => {
+        this.displayError(err);
         this.loading = false;
       }
     );
   }
 
   editTest(id: Guid) {
-    this.router.navigate(['/tests/editTest', id]);
+    this.testService.getEditTest(id).subscribe(
+      (res) => {
+        this.router.navigate(['/tests/editTest', id]);
+      },
+      (err: string) => {
+        this.displayError(err);
+        this.loading = false;
+      }
+    );
   }
+
   openDeleteModal(id: Guid) {
     this.alertService.clear();
     const dialogConfig = new MatDialogConfig();
@@ -171,7 +179,7 @@ export class TestsComponent implements OnInit, OnDestroy {
               this.alertService.success('Test has been deleted successfully');
             },
             error: (error) => {
-              this.alertService.error(error);
+              this.displayError(error);
               this.loading = false;
             },
           });
