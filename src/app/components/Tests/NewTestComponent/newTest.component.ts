@@ -57,6 +57,10 @@ export class NewTestComponent implements OnInit {
   newQuestion: NewQuestion;
   selectedOption: string | StateType;
   solutionPaths: Array<string> = [];
+  response: {
+    success: boolean;
+    msg: string;
+  };
   public minDate: Date;
 
   public TestEnum = Object.values(StateType).filter(
@@ -255,28 +259,7 @@ export class NewTestComponent implements OnInit {
   }
 
   private createTest() {
-    for (let i = 0; i < this.Questions?.controls.length; i++) {
-      this.newQuestion = {
-        name: this.Questions?.controls[i].get('questionName')?.value,
-        description: this.Questions?.controls[i].get('questionDescription')
-          ?.value,
-        questionType: this.Questions?.controls[i].get('questionType')?.value,
-        SubmittedSolution:
-          this.Questions?.controls[i].get('SubmittedSolution')?.value,
-        worthOfPoints: this.Questions?.controls[i].get('worthOfPoints')?.value,
-      };
-      this.newQuestions.push(this.newQuestion);
-    }
-
-    const object = {
-      name: this.f.name.value,
-      description: this.f.description.value,
-      questions: this.newQuestions,
-      testType: this.f.enumSelect.value,
-      validFrom: this.dateFromValue,
-      validTo: this.dateToValue,
-      timeLimit: this.f.hourInput.value * 60 + this.f.minutesInput.value,
-    };
+    const object = this.createEditMap();
 
     const options = {
       indices: true,
@@ -290,7 +273,9 @@ export class NewTestComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: () => {
-          this.alertService.success('Test Created');
+          this.alertService.success('Test created successfully', {
+            keepAfterRouteChange: true,
+          });
           this.router.navigate(['/tests']);
         },
         error: (error) => {
@@ -301,37 +286,70 @@ export class NewTestComponent implements OnInit {
   }
 
   private editTest() {
-    // const params = {
-    //   id: this.id,
-    //   username: this.f.username.value,
-    //   email: this.f.email.value,
-    //   firstname: this.f.firstname.value,
-    //   lastname: this.f.lastname.value,
-    //   password: this.f.password.value,
-    //   confirmPassword: this.f.confirmPassword.value,
-    // };
-    // this.userService
-    //   .editAdminPatch(this.id, params)
-    //   .pipe(first())
-    //   .subscribe({
-    //     next: () => {
-    //       this.response = {
-    //         success: true,
-    //         msg: 'Admin has been edited successfully',
-    //       };
-    //       this.dialogRef.close(this.response);
-    //     },
-    //     error: (error) => {
-    //       this.response = {
-    //         success: false,
-    //         msg: error,
-    //       };
-    //       this.dialogRef.close(this.response);
-    //       this.loading = false;
-    //     },
-    //   });
+    const object = this.createEditMap();
+
+    const options = {
+      indices: true,
+    };
+
+    const fd = objectToFormData(object, options);
+
+    this.testService
+      .editTest(this.testId, fd)
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.alertService.success('Test edited successfully', {
+            keepAfterRouteChange: true,
+          });
+          this.router.navigate(['/tests']);
+        },
+        error: (error) => {
+          this.displayError(error);
+          this.loading = false;
+        },
+      });
   }
 
+  createEditMap() {
+    for (let i = 0; i < this.Questions?.controls.length; i++) {
+      this.newQuestion = {
+        name: this.Questions?.controls[i].get('questionName')?.value,
+        description: this.Questions?.controls[i].get('questionDescription')
+          ?.value,
+        questionType: this.Questions?.controls[i].get('questionType')?.value,
+        SubmittedSolution:
+          this.Questions?.controls[i].get('SubmittedSolution')?.value,
+        worthOfPoints: this.Questions?.controls[i].get('worthOfPoints')?.value,
+      };
+      this.newQuestions.push(this.newQuestion);
+    }
+
+    if (this.isCreateMode) {
+      const object = {
+        name: this.f.name.value,
+        description: this.f.description.value,
+        questions: this.newQuestions,
+        testType: this.f.enumSelect.value,
+        validFrom: this.dateFromValue,
+        validTo: this.dateToValue,
+        timeLimit: this.f.hourInput.value * 60 + this.f.minutesInput.value,
+      };
+      return object;
+    } else {
+      const object = {
+        id: this.testId.toString(),
+        name: this.f.name.value,
+        description: this.f.description.value,
+        questions: this.newQuestions,
+        testType: this.f.enumSelect.value,
+        validFrom: this.dateFromValue,
+        validTo: this.dateToValue,
+        timeLimit: this.f.hourInput.value * 60 + this.f.minutesInput.value,
+      };
+      return object;
+    }
+  }
   //test here
   private displayError(message: string) {
     this.alertService.error(message, { autoClose: false });

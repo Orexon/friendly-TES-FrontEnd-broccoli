@@ -1,5 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { MustMatch } from 'src/app/helpers/mustMatch.validator';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -42,24 +49,26 @@ export class CreateUserDialogComponent implements OnInit {
     this.dialogTitle = this.data.dialogTitle;
     this.confirmBtnTxt = this.data.confirmBtnTxt;
 
-    this.adminForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      firstname: ['', [Validators.required, Validators.maxLength(50)]],
-      lastname: ['', [Validators.required, Validators.maxLength(50)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(6),
-          Validators.maxLength(30),
+    this.adminForm = this.formBuilder.group(
+      {
+        username: ['', Validators.required],
+        firstname: ['', [Validators.required, Validators.maxLength(50)]],
+        lastname: ['', [Validators.required, Validators.maxLength(50)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: [
+          '',
+          [
+            Validators.minLength(6),
+            Validators.maxLength(30),
+            this.isCreateMode ? Validators.required : Validators.nullValidator,
+          ],
         ],
-      ],
-      confirmPassword: [
-        '',
-        [Validators.required, MustMatch('password', 'confirmPassword')],
-      ],
-    });
+        confirmPassword: [''],
+      },
+      {
+        validator: MustMatch('password', 'confirmPassword'),
+      }
+    );
 
     if (!this.isCreateMode) {
       this.userService
@@ -76,6 +85,14 @@ export class CreateUserDialogComponent implements OnInit {
         );
     }
   }
+
+  checkPasswords: ValidatorFn = (
+    group: AbstractControl
+  ): ValidationErrors | null => {
+    let pass = group.get('password')?.value;
+    let confirmPass = group.get('confirmPassword')?.value;
+    return pass === confirmPass ? null : { notSame: true };
+  };
 
   // convenience getter for easy access to form fields
   get f() {

@@ -31,8 +31,13 @@ export class AlertComponent implements OnInit, OnDestroy {
     this.alertSubscription = this.alertService
       .onAlert(this.id)
       .subscribe((alert) => {
+        // clear alerts when an empty alert is received
         if (!alert.message) {
-          this.alerts = [];
+          // filter out alerts without 'keepAfterRouteChange' flag
+          this.alerts = this.alerts.filter((x) => x.keepAfterRouteChange);
+
+          // remove 'keepAfterRouteChange' flag on the rest
+          this.alerts.forEach((x) => delete x.keepAfterRouteChange);
           return;
         }
 
@@ -83,7 +88,7 @@ export class AlertComponent implements OnInit, OnDestroy {
       [AlertSettings.WARNING]: 'alert alert-warning',
     };
 
-    classes.push(alertTypeClass[alert.alertType]);
+    classes.push(alertTypeClass[alert.type]);
 
     if (alert.fade) {
       classes.push('fade');

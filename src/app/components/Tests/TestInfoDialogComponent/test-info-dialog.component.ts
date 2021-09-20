@@ -48,10 +48,10 @@ export class TestInfoDialogComponent implements OnInit {
   }
 
   checkType(num: number) {
-    if (0) {
+    if (num === 0) {
       return 'C#';
     } else {
-      return 'Mixed';
+      return 'PHP';
     }
   }
 

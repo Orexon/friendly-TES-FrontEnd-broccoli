@@ -436,9 +436,9 @@
 
             <button
               mat-raised-button
+              *ngIf="!isCreateMode && getPath(i) !== undefined"
               class="GlobalDarkBtn"
               (click)="download(getPath(i))"
-              *ngIf="!isCreateMode"
             >
               Download Solution
               <mat-icon inline="true">file_download</mat-icon>

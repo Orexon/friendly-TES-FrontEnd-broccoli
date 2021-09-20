@@ -139,6 +139,7 @@ export class TestsComponent implements OnInit, OnDestroy {
   }
 
   editTest(id: Guid) {
+    this.alertService.clear();
     this.testService.getEditTest(id).subscribe(
       (res) => {
         this.router.navigate(['/tests/editTest', id]);
