@@ -8,6 +8,7 @@ import { LoginComponent } from './components/Login/login.component';
 import { AuthGuard } from './helpers/auth.guard';
 import { TestsComponent } from './components/Tests/tests.component';
 import { NewTestComponent } from './components/Tests/NewTestComponent/newTest.component';
+import { ActiveTestComponent } from './components/Active-test/active-test.component';
 
 const routes: Routes = [
   { path: '', canActivate: [AuthGuard], component: HomeComponent },
@@ -24,7 +25,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: NewTestComponent,
   },
-  { path: 'login', component: LoginComponent },
+  { path: 'activeTest/:id', component: ActiveTestComponent },
 
   // otherwise redirect to home
   { path: '**', redirectTo: '' },

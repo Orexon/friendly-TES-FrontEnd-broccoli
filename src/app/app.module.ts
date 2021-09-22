@@ -32,6 +32,7 @@ import { CreateUserDialogComponent } from './components/createUserDialog/create-
 import { ConfirmationDialogComponent } from './components/confirmationDialog/confirmation-dialog.component';
 import { NewTestComponent } from './components/Tests/NewTestComponent/newTest.component';
 import { TestInfoDialogComponent } from './components/Tests/TestInfoDialogComponent/test-info-dialog.component';
+import { ActiveTestComponent } from './components/Active-test/active-test.component';
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import { TestInfoDialogComponent } from './components/Tests/TestInfoDialogCompon
     CreateUserDialogComponent,
     ConfirmationDialogComponent,
     TestInfoDialogComponent,
+    ActiveTestComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

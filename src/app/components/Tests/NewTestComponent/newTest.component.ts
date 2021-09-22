@@ -191,7 +191,8 @@ export class NewTestComponent implements OnInit {
         localDate.getDate(),
         localDate.getHours(),
         localDate.getMinutes(),
-        localDate.getSeconds()
+        localDate.getSeconds(),
+        localDate.setSeconds(0)
       )
     );
   }
@@ -205,7 +206,8 @@ export class NewTestComponent implements OnInit {
         localDateTo.getDate(),
         localDateTo.getHours(),
         localDateTo.getMinutes(),
-        localDateTo.getSeconds()
+        localDateTo.getSeconds(),
+        localDateTo.setSeconds(0)
       )
     );
   }

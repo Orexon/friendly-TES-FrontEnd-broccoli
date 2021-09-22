@@ -1,6 +1,6 @@
 <div
   *ngFor="let alert of alerts"
-  class="{{ cssClass(alert) }}"
+  class="{{ cssClasses(alert) }}"
   style="display: flex; text-align: center; margin: 0 auto"
 >
   <div class="message-div" [innerHTML]="alert.message"></div>

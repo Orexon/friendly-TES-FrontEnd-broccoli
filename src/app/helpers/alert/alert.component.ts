@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Alert } from './alert.model';
+import { Alert, AlertType } from './alert.model';
 import { AlertService } from './alert.service';
 import { AlertSettings } from './alert-settings';
 
@@ -76,16 +76,16 @@ export class AlertComponent implements OnInit, OnDestroy {
     }
   }
 
-  cssClass(alert: Alert) {
+  cssClasses(alert: Alert) {
     if (!alert) return;
 
     const classes = ['alert', 'alert-dismissable'];
 
     const alertTypeClass = {
-      [AlertSettings.SUCCESS]: 'alert alert-success',
-      [AlertSettings.ERROR]: 'alert alert-danger',
-      [AlertSettings.INFO]: 'alert alert-info',
-      [AlertSettings.WARNING]: 'alert alert-warning',
+      [AlertType.Success]: 'alert alert-success',
+      [AlertType.Error]: 'alert alert-danger',
+      [AlertType.Info]: 'alert alert-info',
+      [AlertType.Warning]: 'alert alert-warning',
     };
 
     classes.push(alertTypeClass[alert.type]);

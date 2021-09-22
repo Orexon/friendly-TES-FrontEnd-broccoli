@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { Alert } from './alert.model';
+import { Alert, AlertType } from './alert.model';
 import { AlertSettings } from './alert-settings';
 
 @Injectable({ providedIn: 'root' })
@@ -13,32 +13,26 @@ export class AlertService {
     return this.subject.asObservable().pipe(filter((x) => x && x.id === id));
   }
 
+  // convenience methods
   success(message: string, options?: any) {
-    this.alert(
-      new Alert({ ...options, alertType: AlertSettings.SUCCESS, message })
-    );
+    this.alert(new Alert({ ...options, type: AlertType.Success, message }));
   }
 
   error(message: string, options?: any) {
-    this.alert(
-      new Alert({ ...options, alertType: AlertSettings.ERROR, message })
-    );
+    this.alert(new Alert({ ...options, type: AlertType.Error, message }));
   }
 
   info(message: string, options?: any) {
-    this.alert(
-      new Alert({ ...options, alertType: AlertSettings.INFO, message })
-    );
+    this.alert(new Alert({ ...options, type: AlertType.Info, message }));
   }
 
   warn(message: string, options?: any) {
-    this.alert(
-      new Alert({ ...options, alertType: AlertSettings.WARNING, message })
-    );
+    this.alert(new Alert({ ...options, type: AlertType.Warning, message }));
   }
 
   alert(alert: Alert) {
     alert.id = alert.id || this.defaultId;
+    alert.autoClose = alert.autoClose === undefined ? true : alert.autoClose;
     this.subject.next(alert);
   }
 

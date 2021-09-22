@@ -18,3 +18,10 @@ export class Question {
   solutionFilePath: string;
   worthOfPoints: number;
 }
+export class QuestionList {
+  id: Guid;
+  name: string;
+  description: string;
+  questionType: QuestionType;
+  worthOfPoints: number;
+}

@@ -1,11 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Question } from 'src/app/models/question';
-import { QuestionType } from 'src/app/models/questionType';
-import { TestLink } from 'src/app/models/testLink';
 import { StateType } from 'src/app/models/testType';
 import { DownloadService } from 'src/app/services/download.service';
-import { TestService } from 'src/app/services/tests.service';
 
 @Component({
   selector: 'app-test-info-dialog',
@@ -34,8 +31,6 @@ export class TestInfoDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.data);
-
     this.dialogTitle = this.data.dialogTitle;
     this.description = this.data.description;
     this.questions = this.data.questions;

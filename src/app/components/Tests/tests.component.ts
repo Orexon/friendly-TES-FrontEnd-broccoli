@@ -98,7 +98,6 @@ export class TestsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.subs) {
       this.subs.unsubscribe();
-      this.alertService.clear();
     }
   }
 
