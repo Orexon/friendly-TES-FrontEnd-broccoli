@@ -6,18 +6,16 @@
   </div>
   <ul class="nav-links" [ngClass]="{ open: isOpen }">
     <li>
-      <a routerLink="/" (click)="toggleCollapse()" routerLinkActive="active"
-        >Home</a
-      >
+      <a routerLink="/" (click)="close()" routerLinkActive="active">Home</a>
     </li>
     <li>
-      <a (click)="toggleCollapse()" routerLink="/admin">Admin</a>
+      <a (click)="close()" routerLink="/admin">Admin</a>
     </li>
     <li>
-      <a (click)="toggleCollapse()" routerLink="/tests">Tests</a>
+      <a (click)="close()" routerLink="/tests">Tests</a>
     </li>
     <li>
-      <a (click)="toggleCollapse()" routerLink="/offer">Results</a>
+      <a (click)="close()" routerLink="/offer">Results</a>
     </li>
     <li>
       <a (click)="logout()">Logout</a>
