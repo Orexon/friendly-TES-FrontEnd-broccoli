@@ -14,7 +14,7 @@ import { Test } from 'src/app/models/test';
 import { TestService } from 'src/app/services/tests.service';
 import { TestInfoDialogComponent } from './TestInfoDialogComponent/test-info-dialog.component';
 import { Router } from '@angular/router';
-import { calculteTimeLimit } from 'src/app/helpers/timeLimitCalc';
+import { calculateTimeLimit } from 'src/app/helpers/timeLimitCalc';
 
 @Component({
   templateUrl: 'tests.component.html',
@@ -121,7 +121,7 @@ export class TestsComponent implements OnInit, OnDestroy {
           createTime: this.testInfo.createTime,
           validFrom: this.testInfo.validFrom,
           validTo: this.testInfo.validTo,
-          timeLimit: calculteTimeLimit(this.testInfo.timeLimit),
+          timeLimit: calculateTimeLimit(this.testInfo.timeLimit),
           testLink: this.testInfo.urlLinkId,
         };
 

@@ -77,11 +77,16 @@
     </div>
     <div *ngIf="testActive">
       <mat-card-content>
-        <p>TIMER</p>
-        <mat-tab-group>
+        <div class="countdown">
+          <countdown
+            #cd
+            [config]="this.config"
+            (event)="handleEvent($event)"
+          ></countdown>
+        </div>
+        <mat-tab-group class="questionGroup" mat-align-tabs="center">
           <mat-tab
             *ngFor="let question of this.questionList; let i = index"
-            mat-align-tabs="center"
             class="questionTab"
           >
             <ng-template mat-tab-label>Question {{ i + 1 }}</ng-template>
@@ -91,14 +96,14 @@
               (ngSubmit)="questionSolutionSubmit(question.id)"
             >
               <div class="tabContent">
-                <div class="tabItem">
+                <div class="tabItem questionName">
                   {{ question.name }}
                 </div>
                 <div class="tabItem">
-                  {{ question.description }}
+                  Question description: {{ question.description }}
                 </div>
                 <div class="tabItem">
-                  {{ question.worthOfPoints }}
+                  Question points worth: {{ question.worthOfPoints }}
                 </div>
               </div>
               <div class="uploadSubmit">

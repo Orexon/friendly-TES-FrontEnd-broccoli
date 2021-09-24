@@ -1,28 +1,60 @@
 .activeTestContainer {
   z-index: 1;
-  width: 90%;
   margin: auto;
   min-height: 100vh;
   transition: 1s all ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: aquamarine;
+}
+
+.questionGroup {
+  transition: 1s all ease;
+}
+
+.questionTab {
+  transition: 1s all ease;
 }
 
 .title {
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 600;
+}
+
+.questionName {
+  text-align: center;
 }
 
 .testCard {
   margin-top: 20px;
   margin-bottom: 20px;
-  max-width: 90%;
+  max-width: 80%;
+  width: 900px;
+  transition: 1s all ease;
+}
+
+@media screen and (min-width: 1400px) {
+  .testCard {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-width: 60%;
+    transition: 1s all ease;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .testCard {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-width: 70%;
+    transition: 1s all ease;
+  }
 }
 
 mat-card-content {
   font-size: 16px;
   margin-top: 15px;
+  transition: 1s all ease;
 }
 
 .centerHeading {
@@ -45,6 +77,8 @@ mat-card-content {
 
 .mat-form-field {
   text-align: center;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .userForm {
@@ -56,9 +90,13 @@ mat-card-content {
 .file-input {
   display: none;
 }
+
 .tabContent {
   margin-top: 15px;
+  font-size: 16px;
+  font-weight: 500;
 }
+
 .tabItem {
   margin-top: 30px;
 }
@@ -79,8 +117,13 @@ mat-card-content {
   display: flex;
   justify-content: flex-end;
 }
+.countdown {
+  text-align: center;
+  font-size: medium;
+  font-weight: 600;
+}
 
-@media screen and (min-width: 864px) {
+@media screen and (min-width: 904px) {
   .userForm {
     display: flex;
     flex-direction: row;
@@ -103,6 +146,11 @@ mat-card-content {
     padding: 10px;
     flex-grow: 1;
   }
+
+  .mat-form-field {
+    text-align: center;
+    margin-left: 5px;
+  }
 }
 @media screen and (min-width: 768px) {
   .uploadSubmit {
@@ -120,5 +168,6 @@ mat-card-content {
     justify-content: flex-end;
     align-items: center;
     margin-bottom: 20px;
+    margin-left: 10px;
   }
 }

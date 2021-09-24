@@ -25,7 +25,7 @@ import { NewTest } from 'src/app/models/newTest';
 import { NewQuestion } from 'src/app/models/question';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { calculteTimeLimit } from 'src/app/helpers/timeLimitCalc';
+import { calculateTimeLimit } from 'src/app/helpers/timeLimitCalc';
 import { objectToFormData } from 'src/app/helpers/objectToFormData';
 import { DownloadService } from 'src/app/services/download.service';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
@@ -143,8 +143,8 @@ export class NewTestComponent implements OnInit {
             enumSelect: x.testType,
             dateFrom: x.validFrom,
             dateTo: x.validTo,
-            hourInput: calculteTimeLimit(x.timeLimit).totalHours,
-            minutesInput: calculteTimeLimit(x.timeLimit).mins,
+            hourInput: calculateTimeLimit(x.timeLimit).totalHours,
+            minutesInput: calculateTimeLimit(x.timeLimit).mins,
             Questions: x.questions.forEach((element) => {
               this.addQuestion();
               this.questionForm.patchValue({
@@ -184,32 +184,27 @@ export class NewTestComponent implements OnInit {
 
   get dateFromValue() {
     var localDate = this.testForm.controls['dateFrom'].value;
-    return new Date(
-      Date.UTC(
-        localDate.getFullYear(),
-        localDate.getMonth(),
-        localDate.getDate(),
-        localDate.getHours(),
-        localDate.getMinutes(),
-        localDate.getSeconds(),
-        localDate.setSeconds(0)
-      )
-    );
+    var year = localDate.getFullYear();
+    var month = localDate.getMonth();
+    var day = localDate.getDate();
+    var hours = localDate.getHours();
+    var minutes = localDate.getMinutes();
+    var seconds = 0;
+
+    return new Date(Date.UTC(year, month, day, hours, minutes, seconds));
   }
 
   get dateToValue() {
     var localDateTo = this.testForm.controls['dateTo'].value;
-    return new Date(
-      Date.UTC(
-        localDateTo.getFullYear(),
-        localDateTo.getMonth(),
-        localDateTo.getDate(),
-        localDateTo.getHours(),
-        localDateTo.getMinutes(),
-        localDateTo.getSeconds(),
-        localDateTo.setSeconds(0)
-      )
-    );
+
+    var year = localDateTo.getFullYear();
+    var month = localDateTo.getMonth();
+    var day = localDateTo.getDate();
+    var hours = localDateTo.getHours();
+    var minutes = localDateTo.getMinutes();
+    var seconds = 0;
+    console.log(year, month, day, hours, minutes, seconds);
+    return new Date(Date.UTC(year, month, day, hours, minutes, seconds));
   }
 
   get Questions() {
@@ -281,6 +276,7 @@ export class NewTestComponent implements OnInit {
           this.router.navigate(['/tests']);
         },
         error: (error) => {
+          this.newQuestions = [];
           this.displayError(error);
           this.loading = false;
         },
@@ -307,6 +303,7 @@ export class NewTestComponent implements OnInit {
           this.router.navigate(['/tests']);
         },
         error: (error) => {
+          this.newQuestions = [];
           this.displayError(error);
           this.loading = false;
         },

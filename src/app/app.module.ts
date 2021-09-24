@@ -16,6 +16,9 @@ import {
   NgxMatNativeDateModule,
 } from '@angular-material-components/datetime-picker';
 
+//Countdown module
+import { CountdownModule } from 'ngx-countdown';
+
 //FileUpload module
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 //Angular Material.
@@ -48,6 +51,7 @@ import { ActiveTestComponent } from './components/Active-test/active-test.compon
     NgxMatTimepickerModule,
     NgxMatNativeDateModule,
     NgxMatFileInputModule,
+    CountdownModule,
   ],
   declarations: [
     AppComponent,
