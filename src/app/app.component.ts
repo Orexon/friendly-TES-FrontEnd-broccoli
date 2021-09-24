@@ -25,6 +25,7 @@ export class AppComponent {
     this.resizeSubscription$ = this.resizeObservable$.subscribe((evt) => {
       if (window.innerWidth > 768 && this.isOpen === true) {
         this.isOpen = !this.isOpen;
+        enableBodyScroll(this.scrollTarget.nativeElement);
       }
     });
   }

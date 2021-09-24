@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -17,6 +18,7 @@ import {
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { AlertService } from 'src/app/helpers/alert/alert.service';
+import { objectToFormData } from 'src/app/helpers/objectToFormData';
 import { calculateTimeLimit } from 'src/app/helpers/timeLimitCalc';
 import { ActiveTest } from 'src/app/models/activeTest';
 import { QuestionList } from 'src/app/models/question';
@@ -51,6 +53,7 @@ export class ActiveTestComponent implements OnInit {
   testData: ActiveTest;
   userForm: FormGroup;
   questionSolutionForm: FormGroup;
+  solutionForm: FormGroup;
   questionList: QuestionList[] | undefined;
   testActive: boolean = false;
   fileName: string;
@@ -58,6 +61,7 @@ export class ActiveTestComponent implements OnInit {
   email: string;
   config: CountdownConfig;
   notify: string = '';
+  accept: string = '.cs';
 
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('cd') countdown: CountdownComponent;
@@ -110,8 +114,27 @@ export class ActiveTestComponent implements OnInit {
     });
 
     this.questionSolutionForm = this.formBuilder.group({
+      SubmittedSolution: this.formBuilder.array(
+        [
+          this.formBuilder.group({
+            SubmittedSolution: new FormControl(null, [Validators.required]),
+          }),
+        ],
+        Validators.required
+      ),
+    });
+  }
+
+  get SubmittedSolution() {
+    return this.questionSolutionForm.controls['SubmittedSolution'] as FormArray;
+  }
+
+  addSolution() {
+    this.solutionForm = this.formBuilder.group({
       SubmittedSolution: new FormControl(null, [Validators.required]),
     });
+
+    this.SubmittedSolution.push(this.solutionForm);
   }
 
   get f() {
@@ -161,6 +184,11 @@ export class ActiveTestComponent implements OnInit {
         this.testData = res;
         console.log(this.testData);
         this.questionList = this.testData.questions;
+
+        // for (let index = 0; index < this.questionList!.length; index++) {
+        //   this.addSolution();
+        // }
+
         this.timeLimit = this.testData.timeLimit;
         this.countdownTime = calculateTimeLimit(this.timeLimit).totalSeconds;
         this.setCountdown(this.countdownTime);
@@ -175,24 +203,36 @@ export class ActiveTestComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.selectedFile = event.target.files[0];
-      this.fileName = file.name;
-    }
+    // const file: File = event.target.files[0];
+    // if (file) {
+    //   this.selectedFile = event.target.files[0];
+    //   this.fileName = file.name;
+    // }
+  }
+
+  get Solutions() {
+    return this.questionSolutionForm.controls['SubmittedSolution'] as FormArray;
   }
 
   questionSolutionSubmit(questionId: Guid) {
     const params = {
-      SubmittedSolution: this.selectedFile,
       TestId: this.testId,
       Email: this.email,
-      QuestionId: this.testId,
+      SubmittedSolution:
+        this.questionSolutionForm.controls['SubmittedSolution'].value,
+      QuestionId: questionId,
     };
+
+    console.log(params);
+    const options = {
+      indices: true,
+    };
+
+    const fd = objectToFormData(params, options);
 
     this.activeTestService.submitUserSolution(this.testId, params).subscribe(
       (res) => {
-        // this.testData = res;
+        this.alertService.success('Solution Submited', res);
         this.testActive = true;
       },
       (err: string) => {

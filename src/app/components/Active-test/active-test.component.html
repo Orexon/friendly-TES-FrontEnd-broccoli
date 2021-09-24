@@ -108,15 +108,37 @@
               </div>
               <div class="uploadSubmit">
                 <div class="uploadBtn">
+                  <mat-form-field>
+                    <ngx-mat-file-input
+                      formControlName="SubmittedSolution"
+                      type="file"
+                      (change)="onFileSelected($event)"
+                      [accept]="accept"
+                      name="SubmittedSolution"
+                    >
+                      <button
+                        type="button"
+                        name="SubmittedSolution"
+                        mat-raised-button
+                        color="primary"
+                        class="upload-btn"
+                      >
+                        <mat-icon>attach_file</mat-icon>
+                      </button>
+                    </ngx-mat-file-input>
+                  </mat-form-field>
+                  <!-- 
                   <input
                     type="file"
                     class="file-input"
-                    (change)="onFileSelected($event)"
+                    name="SubmittedSolution"
+                    formControlName="SubmittedSolution"
                     #fileUpload
                   />
                   <div class="file-upload">
                     {{ fileName || "No file uploaded yet." }}
                     <button
+                      type="button"
                       name="SubmittedSolution"
                       mat-raised-button
                       color="primary"
@@ -126,9 +148,8 @@
                       Choose file
                       <mat-icon>attach_file</mat-icon>
                     </button>
-                  </div>
+                  </div> -->
                 </div>
-
                 <div class="submitBtn">
                   <button
                     [disabled]="!userForm.valid && selectedFile != null"
