@@ -32,13 +32,13 @@ export class ActiveTestService {
     );
   }
 
-  submitUserSolution(id: Guid, data: any): Observable<Solution> {
+  submitUserSolution(id: Guid, params: Solution): Observable<Solution> {
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
 
     return this.http.post<Solution>(
       `${environment.apiUrl}/ActiveTest/submitSolution/${id}`,
-      data,
+      params,
       {
         headers: headers,
       }

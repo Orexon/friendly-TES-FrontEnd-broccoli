@@ -22,6 +22,7 @@ import { objectToFormData } from 'src/app/helpers/objectToFormData';
 import { calculateTimeLimit } from 'src/app/helpers/timeLimitCalc';
 import { ActiveTest } from 'src/app/models/activeTest';
 import { QuestionList } from 'src/app/models/question';
+import { Solution } from 'src/app/models/submitSolution';
 import { ActiveTestService } from 'src/app/services/activeTest.service';
 
 const CountdownTimeUnits: Array<[string, number]> = [
@@ -62,6 +63,7 @@ export class ActiveTestComponent implements OnInit {
   config: CountdownConfig;
   notify: string = '';
   accept: string = '.cs';
+  object: Solution;
 
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('cd') countdown: CountdownComponent;
@@ -114,19 +116,14 @@ export class ActiveTestComponent implements OnInit {
     });
 
     this.questionSolutionForm = this.formBuilder.group({
-      SubmittedSolution: this.formBuilder.array(
-        [
-          this.formBuilder.group({
-            SubmittedSolution: new FormControl(null, [Validators.required]),
-          }),
-        ],
-        Validators.required
-      ),
+      SubmittedSolutionArr: this.formBuilder.array([], [Validators.required]),
     });
   }
 
-  get SubmittedSolution() {
-    return this.questionSolutionForm.controls['SubmittedSolution'] as FormArray;
+  get SubmittedSolutionArr() {
+    return this.questionSolutionForm.controls[
+      'SubmittedSolutionArr'
+    ] as FormArray;
   }
 
   addSolution() {
@@ -134,7 +131,7 @@ export class ActiveTestComponent implements OnInit {
       SubmittedSolution: new FormControl(null, [Validators.required]),
     });
 
-    this.SubmittedSolution.push(this.solutionForm);
+    this.SubmittedSolutionArr.push(this.solutionForm);
   }
 
   get f() {
@@ -184,15 +181,13 @@ export class ActiveTestComponent implements OnInit {
         this.testData = res;
         console.log(this.testData);
         this.questionList = this.testData.questions;
-
-        // for (let index = 0; index < this.questionList!.length; index++) {
-        //   this.addSolution();
-        // }
-
         this.timeLimit = this.testData.timeLimit;
         this.countdownTime = calculateTimeLimit(this.timeLimit).totalSeconds;
         this.setCountdown(this.countdownTime);
-        this.testActive = true;
+        this.questionList?.forEach((element) => {
+          this.addSolution();
+        }),
+          (this.testActive = true);
       },
       (err: string) => {
         console.log(err);
@@ -214,23 +209,25 @@ export class ActiveTestComponent implements OnInit {
     return this.questionSolutionForm.controls['SubmittedSolution'] as FormArray;
   }
 
-  questionSolutionSubmit(questionId: Guid) {
-    const params = {
+  TestSubmit() {}
+
+  questionSolutionSubmit(questionId: Guid, i: number) {
+    const object: Solution = {
       TestId: this.testId,
       Email: this.email,
-      SubmittedSolution:
-        this.questionSolutionForm.controls['SubmittedSolution'].value,
-      QuestionId: questionId,
+      SubmitedFile:
+        this.SubmittedSolutionArr.controls[i].get('SubmittedSolution')?.value,
+      QuestionID: questionId,
     };
 
-    console.log(params);
     const options = {
       indices: true,
     };
 
-    const fd = objectToFormData(params, options);
+    const fd = objectToFormData(object, options);
+    console.log(fd);
 
-    this.activeTestService.submitUserSolution(this.testId, params).subscribe(
+    this.activeTestService.submitUserSolution(this.testId, fd).subscribe(
       (res) => {
         this.alertService.success('Solution Submited', res);
         this.testActive = true;

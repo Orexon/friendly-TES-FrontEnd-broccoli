@@ -85,84 +85,62 @@
           ></countdown>
         </div>
         <mat-tab-group class="questionGroup" mat-align-tabs="center">
-          <mat-tab
-            *ngFor="let question of this.questionList; let i = index"
-            class="questionTab"
+          <form
+            [formGroup]="questionSolutionForm"
+            class="mat-elevation-z6"
+            (ngSubmit)="TestSubmit()"
           >
-            <ng-template mat-tab-label>Question {{ i + 1 }}</ng-template>
-            <form
-              [formGroup]="questionSolutionForm"
-              class="mat-elevation-z6"
-              (ngSubmit)="questionSolutionSubmit(question.id)"
-            >
-              <div class="tabContent">
-                <div class="tabItem questionName">
-                  {{ question.name }}
-                </div>
-                <div class="tabItem">
-                  Question description: {{ question.description }}
-                </div>
-                <div class="tabItem">
-                  Question points worth: {{ question.worthOfPoints }}
-                </div>
-              </div>
-              <div class="uploadSubmit">
-                <div class="uploadBtn">
-                  <mat-form-field>
-                    <ngx-mat-file-input
-                      formControlName="SubmittedSolution"
-                      type="file"
-                      (change)="onFileSelected($event)"
-                      [accept]="accept"
-                      name="SubmittedSolution"
-                    >
+            <div formArrayName="SubmittedSolutionArr">
+              <div *ngFor="let question of this.questionList; let i = index">
+                <mat-tab class="questionTab" [formGroupName]="i">
+                  <ng-template mat-tab-label>Question {{ i + 1 }}</ng-template>
+                  <div class="tabContent">
+                    <div class="tabItem questionName">
+                      {{ question.name }}
+                    </div>
+                    <div class="tabItem">
+                      Question description: {{ question.description }}
+                    </div>
+                    <div class="tabItem">
+                      Question points worth: {{ question.worthOfPoints }}
+                    </div>
+                  </div>
+                  <div class="uploadSubmit">
+                    <div class="uploadBtn">
+                      <mat-form-field>
+                        <ngx-mat-file-input
+                          formControlName="SubmittedSolution"
+                          type="file"
+                          (change)="onFileSelected($event)"
+                          [accept]="accept"
+                          name="SubmittedSolution"
+                        >
+                          <button
+                            type="button"
+                            mat-raised-button
+                            color="primary"
+                            class="upload-btn"
+                          >
+                            <mat-icon>attach_file</mat-icon>
+                          </button>
+                        </ngx-mat-file-input>
+                      </mat-form-field>
+                    </div>
+                    <div class="submitBtn">
                       <button
-                        type="button"
-                        name="SubmittedSolution"
+                        [disabled]="!userForm.valid && selectedFile != null"
                         mat-raised-button
-                        color="primary"
-                        class="upload-btn"
+                        class="GlobalDarkBtn"
+                        (click)="questionSolutionSubmit(question.id, i)"
                       >
-                        <mat-icon>attach_file</mat-icon>
+                        Submit Solution
                       </button>
-                    </ngx-mat-file-input>
-                  </mat-form-field>
-                  <!-- 
-                  <input
-                    type="file"
-                    class="file-input"
-                    name="SubmittedSolution"
-                    formControlName="SubmittedSolution"
-                    #fileUpload
-                  />
-                  <div class="file-upload">
-                    {{ fileName || "No file uploaded yet." }}
-                    <button
-                      type="button"
-                      name="SubmittedSolution"
-                      mat-raised-button
-                      color="primary"
-                      class="upload-btn"
-                      (click)="fileUpload.click()"
-                    >
-                      Choose file
-                      <mat-icon>attach_file</mat-icon>
-                    </button>
-                  </div> -->
-                </div>
-                <div class="submitBtn">
-                  <button
-                    [disabled]="!userForm.valid && selectedFile != null"
-                    mat-raised-button
-                    class="GlobalDarkBtn"
-                    type="submit"
-                  >
-                    Submit Solution
-                  </button>
-                </div>
+                    </div>
+                  </div>
+                </mat-tab>
               </div>
-            </form>
-          </mat-tab>
+            </div>
+          </form>
         </mat-tab-group>
       </mat-card-content>
     </div>

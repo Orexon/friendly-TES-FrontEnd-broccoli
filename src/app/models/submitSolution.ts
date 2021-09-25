@@ -1,8 +1,8 @@
 import { Guid } from 'guid-typescript';
 
 export class Solution {
-  testId: Guid;
-  questionId: Guid;
-  email: string;
-  SubmittedSolution: File;
+  TestId: Guid;
+  QuestionID: Guid;
+  SubmitedFile: File;
+  Email: string;
 }
