@@ -34,6 +34,11 @@
   transition: 1s all ease;
 }
 
+:host ::ng-deep .spinner {
+  stroke: #ffffff;
+  color: #ffffff;
+}
+
 @media screen and (min-width: 1400px) {
   .testCard {
     margin-top: 20px;
@@ -101,6 +106,8 @@ mat-card-content {
   margin-top: 30px;
 }
 
+/*                             */
+
 .uploadSubmit {
   display: flex;
   flex-direction: column;
@@ -117,10 +124,26 @@ mat-card-content {
   display: flex;
   justify-content: flex-end;
 }
+
+/*                             */
+
+.timeFinish {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
 .countdown {
+  margin-bottom: 20px;
   text-align: center;
   font-size: medium;
   font-weight: 600;
+}
+
+.finishBtn {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
 }
 
 @media screen and (min-width: 904px) {
@@ -169,5 +192,28 @@ mat-card-content {
     align-items: center;
     margin-bottom: 20px;
     margin-left: 10px;
+  }
+
+  .timeFinish {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    align-items: center;
+  }
+
+  .countdown {
+    display: flex;
+    flex-basis: 54%;
+    margin-bottom: 20px;
+    font-size: medium;
+    font-weight: 600;
+    justify-content: flex-end;
+  }
+
+  .finishBtn {
+    flex-basis: 46%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
   }
 }

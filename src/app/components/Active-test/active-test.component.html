@@ -1,147 +1,194 @@
 <div class="activeTestContainer">
   <mat-card class="testCard mat-elevation-z8">
-    <mat-card-header class="centerHeading">
-      <mat-card-title class="title">{{ testName }}</mat-card-title>
-    </mat-card-header>
+    <div *ngIf="!done">
+      <mat-card-header class="centerHeading">
+        <mat-card-title class="title">{{ testName }}</mat-card-title>
+      </mat-card-header>
 
-    <alert></alert>
+      <alert></alert>
 
-    <div *ngIf="!testActive">
-      <mat-card-content>
-        <p>{{ testDescription }}</p>
-        <P>
-          Test is valid between following times: {{ ValidFrom }} - {{ ValidTo }}
-        </P>
-        <!-- <P> Test will have a timelimit of: {{ timeLimit }} </P> -->
-      </mat-card-content>
-      <form
-        [formGroup]="userForm"
-        class="userForm mat-elevation-z2"
-        (ngSubmit)="startTest()"
-      >
-        <div class="userFormFields">
-          <mat-form-field>
-            <input
-              type="text"
-              matInput
-              placeholder="Enter email"
-              formControlName="email"
-              [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
-              required
-            />
-            <mat-error *ngIf="f['email'].errors?.required"
-              >Email is required</mat-error
-            >
-          </mat-form-field>
-          <mat-form-field>
-            <input
-              type="text"
-              matInput
-              placeholder="Enter firstName"
-              formControlName="firstName"
-              [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }"
-              required
-            />
-            <mat-error *ngIf="f['firstName'].errors?.required"
-              >firstName is required</mat-error
-            >
-          </mat-form-field>
-          <mat-form-field>
-            <input
-              type="text"
-              matInput
-              placeholder="Enter lastName"
-              formControlName="lastName"
-              [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }"
-              required
-            />
-            <mat-error *ngIf="f['lastName'].errors?.required"
-              >lastName is required</mat-error
-            >
-          </mat-form-field>
-        </div>
-
-        <div class="testBtn">
-          <div>
-            <button
-              [disabled]="!userForm.valid"
-              mat-raised-button
-              class="GlobalDarkBtn"
-              type="submit"
-            >
-              Start Test
-            </button>
+      <div *ngIf="!testActive">
+        <mat-card-content>
+          <p>{{ testDescription }}</p>
+          <P>
+            Test is valid between following times: {{ ValidFrom }} -
+            {{ ValidTo }}
+          </P>
+        </mat-card-content>
+        <form
+          [formGroup]="userForm"
+          class="userForm mat-elevation-z2"
+          (ngSubmit)="startTest()"
+        >
+          <div class="userFormFields">
+            <mat-form-field>
+              <input
+                type="text"
+                matInput
+                placeholder="Enter email"
+                formControlName="email"
+                [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                required
+              />
+              <mat-error *ngIf="f['email'].errors?.required"
+                >Email is required</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                type="text"
+                matInput
+                placeholder="Enter firstName"
+                formControlName="firstName"
+                [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }"
+                required
+              />
+              <mat-error *ngIf="f['firstName'].errors?.required"
+                >firstName is required</mat-error
+              >
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                type="text"
+                matInput
+                placeholder="Enter lastName"
+                formControlName="lastName"
+                [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }"
+                required
+              />
+              <mat-error *ngIf="f['lastName'].errors?.required"
+                >lastName is required</mat-error
+              >
+            </mat-form-field>
           </div>
-        </div>
-      </form>
-    </div>
-    <div *ngIf="testActive">
-      <mat-card-content>
-        <div class="countdown">
-          <countdown
-            #cd
-            [config]="this.config"
-            (event)="handleEvent($event)"
-          ></countdown>
-        </div>
-        <mat-tab-group class="questionGroup" mat-align-tabs="center">
-          <form
-            [formGroup]="questionSolutionForm"
-            class="mat-elevation-z6"
-            (ngSubmit)="TestSubmit()"
-          >
-            <div formArrayName="SubmittedSolutionArr">
-              <div *ngFor="let question of this.questionList; let i = index">
-                <mat-tab class="questionTab" [formGroupName]="i">
-                  <ng-template mat-tab-label>Question {{ i + 1 }}</ng-template>
-                  <div class="tabContent">
-                    <div class="tabItem questionName">
-                      {{ question.name }}
-                    </div>
-                    <div class="tabItem">
-                      Question description: {{ question.description }}
-                    </div>
-                    <div class="tabItem">
-                      Question points worth: {{ question.worthOfPoints }}
-                    </div>
-                  </div>
-                  <div class="uploadSubmit">
-                    <div class="uploadBtn">
-                      <mat-form-field>
-                        <ngx-mat-file-input
-                          formControlName="SubmittedSolution"
-                          type="file"
-                          (change)="onFileSelected($event)"
-                          [accept]="accept"
-                          name="SubmittedSolution"
-                        >
-                          <button
-                            type="button"
-                            mat-raised-button
-                            color="primary"
-                            class="upload-btn"
-                          >
-                            <mat-icon>attach_file</mat-icon>
-                          </button>
-                        </ngx-mat-file-input>
-                      </mat-form-field>
-                    </div>
-                    <div class="submitBtn">
-                      <button
-                        [disabled]="!userForm.valid && selectedFile != null"
-                        mat-raised-button
-                        class="GlobalDarkBtn"
-                        (click)="questionSolutionSubmit(question.id, i)"
-                      >
-                        Submit Solution
-                      </button>
-                    </div>
-                  </div>
-                </mat-tab>
-              </div>
+
+          <div class="testBtn">
+            <div>
+              <button
+                [disabled]="!userForm.valid"
+                mat-raised-button
+                class="GlobalDarkBtn"
+                type="submit"
+              >
+                Start Test
+              </button>
             </div>
-          </form>
-        </mat-tab-group>
+          </div>
+        </form>
+      </div>
+      <div *ngIf="testActive">
+        <mat-card-content>
+          <div class="timeFinish">
+            <div class="countdown">
+              <countdown
+                #cd
+                [config]="this.config"
+                (event)="handleEvent($event)"
+              ></countdown>
+            </div>
+            <div class="finishBtn">
+              <button
+                [disabled]="!answerExists"
+                mat-raised-button
+                class="GlobalDarkBtn"
+                (click)="finishTest()"
+              >
+                <mat-progress-spinner
+                  mode="indeterminate"
+                  *ngIf="loading"
+                  class="spinner"
+                  diameter="35"
+                ></mat-progress-spinner>
+                <div *ngIf="!loading">Finish Test</div>
+              </button>
+            </div>
+          </div>
+
+          <mat-tab-group class="questionGroup" mat-align-tabs="center">
+            <form
+              [formGroup]="questionSolutionForm"
+              class="mat-elevation-z6"
+              (ngSubmit)="TestSubmit()"
+            >
+              <div formArrayName="SubmittedSolutionArr">
+                <div *ngFor="let question of this.questionList; let i = index">
+                  <mat-tab class="questionTab" [formGroupName]="i">
+                    <ng-template mat-tab-label
+                      >Question {{ i + 1 }}</ng-template
+                    >
+                    <div class="tabContent">
+                      <div class="tabItem questionName">
+                        {{ question.name }}
+                      </div>
+                      <div class="tabItem">
+                        Question description: {{ question.description }}
+                      </div>
+                      <div class="tabItem">
+                        Question points worth: {{ question.worthOfPoints }}
+                      </div>
+                    </div>
+                    <div class="uploadSubmit">
+                      <div class="uploadBtn">
+                        <mat-form-field>
+                          <ngx-mat-file-input
+                            formControlName="SubmittedSolution"
+                            type="file"
+                            (change)="onFileSelected($event)"
+                            [accept]="accept"
+                            name="SubmittedSolution"
+                          >
+                            <button
+                              type="button"
+                              mat-raised-button
+                              color="primary"
+                              class="upload-btn"
+                            >
+                              <mat-icon>attach_file</mat-icon>
+                            </button>
+                          </ngx-mat-file-input>
+                        </mat-form-field>
+                      </div>
+                      <div class="submitBtn">
+                        <button
+                          [disabled]="
+                            this.SubmittedSolutionArr.controls[i].get(
+                              'SubmittedSolution'
+                            )?.value === null
+                          "
+                          mat-raised-button
+                          class="GlobalDarkBtn"
+                          (click)="questionSolutionSubmit(question.id, i)"
+                        >
+                          <mat-progress-spinner
+                            mode="indeterminate"
+                            *ngIf="loading"
+                            class="spinner"
+                            diameter="35"
+                          ></mat-progress-spinner>
+                          <div *ngIf="!loading">Submit Solution</div>
+                        </button>
+                      </div>
+                    </div>
+                  </mat-tab>
+                </div>
+              </div>
+            </form>
+          </mat-tab-group>
+          <div></div>
+        </mat-card-content>
+      </div>
+    </div>
+    <div *ngIf="done">
+      <mat-card-header class="centerHeading">
+        <mat-card-title class="title">{{ testName }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Congratulations!</p>
+        <P>
+          Test has been completed. Test results have been saved. You have
+          received {{ this.points }} from {{ this.maxPoints }}. You will be
+          contacted to the email you have provided. Thank you for participating.
+        </P>
       </mat-card-content>
     </div>
   </mat-card>

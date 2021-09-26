@@ -190,21 +190,22 @@ export class NewTestComponent implements OnInit {
     var hours = localDate.getHours();
     var minutes = localDate.getMinutes();
     var seconds = 0;
-
-    return new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+    var newDate = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+    return newDate;
   }
 
   get dateToValue() {
     var localDateTo = this.testForm.controls['dateTo'].value;
-
     var year = localDateTo.getFullYear();
     var month = localDateTo.getMonth();
     var day = localDateTo.getDate();
     var hours = localDateTo.getHours();
     var minutes = localDateTo.getMinutes();
     var seconds = 0;
-    console.log(year, month, day, hours, minutes, seconds);
-    return new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+    var newDateTo = new Date(
+      Date.UTC(year, month, day, hours, minutes, seconds)
+    );
+    return newDateTo;
   }
 
   get Questions() {

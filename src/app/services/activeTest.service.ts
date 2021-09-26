@@ -10,6 +10,7 @@ import { NewTest } from '../models/newTest';
 import { Question } from '../models/question';
 import { ActiveTest } from '../models/activeTest';
 import { Solution } from '../models/submitSolution';
+import { FinishTest } from '../models/finishTest';
 
 @Injectable({ providedIn: 'root' })
 export class ActiveTestService {
@@ -32,16 +33,23 @@ export class ActiveTestService {
     );
   }
 
-  submitUserSolution(id: Guid, params: Solution): Observable<Solution> {
+  submitUserSolution(id: Guid, params: Solution) {
     const headers = new HttpHeaders();
     headers.append('Accept', 'application/json');
 
-    return this.http.post<Solution>(
+    return this.http.post<any>(
       `${environment.apiUrl}/ActiveTest/submitSolution/${id}`,
       params,
       {
         headers: headers,
       }
+    );
+  }
+
+  finishTest(data: any, id: Guid) {
+    return this.http.post<any>(
+      `${environment.apiUrl}/ActiveTest/finishTest/${id}`,
+      data
     );
   }
 }

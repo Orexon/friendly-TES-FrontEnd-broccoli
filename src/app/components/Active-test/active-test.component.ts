@@ -7,6 +7,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
@@ -21,9 +22,11 @@ import { AlertService } from 'src/app/helpers/alert/alert.service';
 import { objectToFormData } from 'src/app/helpers/objectToFormData';
 import { calculateTimeLimit } from 'src/app/helpers/timeLimitCalc';
 import { ActiveTest } from 'src/app/models/activeTest';
+import { FinishTest } from 'src/app/models/finishTest';
 import { QuestionList } from 'src/app/models/question';
 import { Solution } from 'src/app/models/submitSolution';
 import { ActiveTestService } from 'src/app/services/activeTest.service';
+import { ConfirmationDialogComponent } from '../confirmationDialog/confirmation-dialog.component';
 
 const CountdownTimeUnits: Array<[string, number]> = [
   ['Y', 1000 * 60 * 60 * 24 * 365], // years
@@ -64,6 +67,17 @@ export class ActiveTestComponent implements OnInit {
   notify: string = '';
   accept: string = '.cs';
   object: Solution;
+  response: {
+    scored: number;
+    totalWorth: number;
+  };
+  done: boolean = false;
+  answerExists: boolean = false;
+  dialogMessage: string;
+  confirmBtnTxt: string;
+  cancelBtnTxt: string;
+  points: number;
+  maxPoints: number = 100;
 
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('cd') countdown: CountdownComponent;
@@ -76,7 +90,8 @@ export class ActiveTestComponent implements OnInit {
     private activatedroute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private matDialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -156,7 +171,7 @@ export class ActiveTestComponent implements OnInit {
       email: this.f.email.value,
       firstName: this.f.firstName.value,
       lastName: this.f.lastName.value,
-      id: this.testId,
+      testid: this.testId,
     };
 
     this.activeTestService
@@ -166,6 +181,7 @@ export class ActiveTestComponent implements OnInit {
         next: () => {
           this.email = this.f.email.value;
           this.activateTest(this.testId);
+          this.loading = false;
         },
         error: (error) => {
           console.log(error);
@@ -179,7 +195,6 @@ export class ActiveTestComponent implements OnInit {
     this.activeTestService.activeTestQuestion(id).subscribe(
       (res) => {
         this.testData = res;
-        console.log(this.testData);
         this.questionList = this.testData.questions;
         this.timeLimit = this.testData.timeLimit;
         this.countdownTime = calculateTimeLimit(this.timeLimit).totalSeconds;
@@ -188,6 +203,7 @@ export class ActiveTestComponent implements OnInit {
           this.addSolution();
         }),
           (this.testActive = true);
+        this.loading = false;
       },
       (err: string) => {
         console.log(err);
@@ -209,9 +225,55 @@ export class ActiveTestComponent implements OnInit {
     return this.questionSolutionForm.controls['SubmittedSolution'] as FormArray;
   }
 
+  finishTest() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = false;
+    dialogConfig.minWidth = 300;
+
+    this.dialogMessage = 'Are you sure?';
+    this.confirmBtnTxt = 'Yes';
+    this.cancelBtnTxt = 'Cancel';
+
+    dialogConfig.data = {
+      dialogMessage: this.dialogMessage,
+      confirmBtnTxt: this.confirmBtnTxt,
+      cancelBtnTxt: this.cancelBtnTxt,
+    };
+
+    let dialogRef = this.matDialog.open(
+      ConfirmationDialogComponent,
+      dialogConfig
+    );
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.loading = true;
+        const object: FinishTest = {
+          TestId: this.testId,
+          Email: this.email,
+        };
+        this.activeTestService.finishTest(object, this.testId).subscribe({
+          next: (data) => {
+            this.alertService.clear();
+            this.points = data;
+            this.loading = false;
+            this.done = true;
+          },
+          error: (error) => {
+            this.displayError(error);
+            this.loading = false;
+          },
+        });
+      }
+    });
+  }
+
   TestSubmit() {}
 
   questionSolutionSubmit(questionId: Guid, i: number) {
+    this.alertService.clear();
+    this.loading = true;
     const object: Solution = {
       TestId: this.testId,
       Email: this.email,
@@ -225,18 +287,24 @@ export class ActiveTestComponent implements OnInit {
     };
 
     const fd = objectToFormData(object, options);
-    console.log(fd);
 
-    this.activeTestService.submitUserSolution(this.testId, fd).subscribe(
-      (res) => {
-        this.alertService.success('Solution Submited', res);
-        this.testActive = true;
-      },
-      (err: string) => {
-        this.displayError(err);
+    this.activeTestService.submitUserSolution(this.testId, fd).subscribe({
+      next: (data) => {
+        this.response = data;
         this.loading = false;
-      }
-    );
+        this.answerExists = true;
+        this.alertService.success(
+          'Submition recieved, you scored: ' +
+            this.response.scored +
+            ' points of ' +
+            this.response.totalWorth
+        );
+      },
+      error: (error) => {
+        this.displayError(error);
+        this.loading = false;
+      },
+    });
   }
 
   openSnackBar(message: string, action: string) {
