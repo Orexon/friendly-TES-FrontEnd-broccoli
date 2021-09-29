@@ -26,7 +26,6 @@ export class ResultInfoDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.data);
     this.dialogTitle = this.data.dialogTitle;
     this.fullName = this.data.fullName;
     this.email = this.data.email;

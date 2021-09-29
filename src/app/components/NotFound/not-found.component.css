@@ -1,0 +1,75 @@
+.notFoundContainer {
+  z-index: 1;
+  width: 90%;
+  height: calc(100vh - 44px);
+  margin: auto;
+  transition: 1s all ease;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.Heading {
+  font-size: x-large;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+.mainHeading {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+}
+
+.landingImg {
+  width: 300px;
+}
+
+.qoute {
+  font-size: 16px;
+  font-weight: 600;
+  color: black;
+  margin: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  max-width: 400px;
+}
+
+@media screen and (max-width: 880px) {
+  .Heading {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  .landingImg {
+    width: 250px;
+  }
+  .qoute {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 706px) {
+  .Heading {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
+  .landingImg {
+    width: 250px;
+  }
+  .qoute {
+    font-size: 14px;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

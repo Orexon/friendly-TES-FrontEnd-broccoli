@@ -1,38 +1,36 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
-import { Subscription } from 'rxjs';
 import { AlertService } from 'src/app/helpers/alert/alert.service';
-import { Result } from 'src/app/models/result';
 import { ResultInfo } from 'src/app/models/resultsInfo';
+import { TestResultDto } from 'src/app/models/testResultDto';
 import { ResultsService } from 'src/app/services/results.service';
-import { ResultInfoDialogComponent } from './ResultInfoDialogComponent/result-info-dialog.component';
+import { ResultInfoDialogComponent } from '../ResultInfoDialogComponent/result-info-dialog.component';
 
 @Component({
-  templateUrl: './results.component.html',
-  styleUrls: ['./results.component.css'],
+  selector: 'app-test-results',
+  templateUrl: './test-results.component.html',
+  styleUrls: ['./test-results.component.css'],
 })
-export class ResultsComponent implements OnInit, OnDestroy {
+export class TestResultsComponent implements OnInit {
   loading: boolean = false;
+  testId: Guid;
+  results: TestResultDto[];
   resultInfo: ResultInfo;
-  dialogTitle: string;
-
+  testName: string;
   displayedColumns: string[] = [
+    'Name',
     'Applicant Email',
-    'Test Name',
-    'Total Points',
-    'Question Count',
-    'Overtime',
+    'Points Scored',
+    'Minutes Overtime',
     'actions',
   ];
 
-  public dataSource = new MatTableDataSource<Result>();
-  private subs = new Subscription();
+  public dataSource = new MatTableDataSource<TestResultDto>();
   private dataArray: any;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -41,54 +39,28 @@ export class ResultsComponent implements OnInit, OnDestroy {
   constructor(
     private resultService: ResultsService,
     private alertService: AlertService,
-    private matDialog: MatDialog,
-    private router: Router
+    private activatedroute: ActivatedRoute,
+    private matDialog: MatDialog
   ) {}
 
   ngOnInit() {
-    this.loading = true;
+    this.testId = Guid.parse(this.activatedroute.snapshot.paramMap.get('id')!);
 
-    this.subs.add(
-      this.resultService.getAllResults().subscribe(
-        (res) => {
-          this.loading = false;
-          this.dataArray = res;
-          this.dataSource = new MatTableDataSource(this.dataArray);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-        },
-        (err: HttpErrorResponse) => {
-          this.displayError(err.message);
-          this.loading = false;
-        }
-      )
-    );
-  }
-
-  refresh() {
-    this.resultService.getAllResults().subscribe(
+    this.resultService.getTestResults(this.testId).subscribe(
       (res) => {
         this.loading = false;
+        this.results = res;
+        this.testName = this.results[0].testName;
         this.dataArray = res;
         this.dataSource = new MatTableDataSource(this.dataArray);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      (err: HttpErrorResponse) => {
-        this.displayError(err.message);
+      (err: string) => {
+        this.displayError(err);
         this.loading = false;
       }
     );
-  }
-
-  private displayError(message: string) {
-    this.alertService.error(message, { autoClose: false });
-  }
-
-  ngOnDestroy() {
-    if (this.subs) {
-      this.subs.unsubscribe();
-    }
   }
 
   openResultInfo(testId: Guid, applicantId: Guid) {
@@ -125,13 +97,7 @@ export class ResultsComponent implements OnInit, OnDestroy {
     );
   }
 
-  openTestResults(id: Guid) {
-    this.alertService.clear();
-    this.router.navigate(['/results/test/', id]);
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  private displayError(message: string) {
+    this.alertService.error(message, { autoClose: false });
   }
 }

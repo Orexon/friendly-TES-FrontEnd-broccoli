@@ -8,6 +8,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Guid } from 'guid-typescript';
 import { Result, ResultSimplyfied } from '../models/result';
 import { ResultInfo } from '../models/resultsInfo';
+import { TestResultDto } from '../models/testResultDto';
 
 @Injectable({ providedIn: 'root' })
 export class ResultsService {
@@ -25,7 +26,9 @@ export class ResultsService {
     );
   }
 
-  getTestResults() {
-    return this.http.get(`${environment.apiUrl}/Result/getTest/{id}`);
+  getTestResults(id: Guid): Observable<TestResultDto[]> {
+    return this.http.get<TestResultDto[]>(
+      `${environment.apiUrl}/Result/getTest/${id}`
+    );
   }
 }

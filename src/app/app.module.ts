@@ -38,6 +38,8 @@ import { TestInfoDialogComponent } from './components/Tests/TestInfoDialogCompon
 import { ActiveTestComponent } from './components/Active-test/active-test.component';
 import { ResultsComponent } from './components/Results/results.component';
 import { ResultInfoDialogComponent } from './components/Results/ResultInfoDialogComponent/result-info-dialog.component';
+import { TestResultsComponent } from './components/Results/TestResults/test-results.component';
+import { NotFoundComponent } from './components/NotFound/not-found.component';
 
 @NgModule({
   imports: [
@@ -68,6 +70,8 @@ import { ResultInfoDialogComponent } from './components/Results/ResultInfoDialog
     ActiveTestComponent,
     ResultsComponent,
     ResultInfoDialogComponent,
+    TestResultsComponent,
+    NotFoundComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

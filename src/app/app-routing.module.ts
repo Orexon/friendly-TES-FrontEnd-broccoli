@@ -10,6 +10,8 @@ import { TestsComponent } from './components/Tests/tests.component';
 import { NewTestComponent } from './components/Tests/NewTestComponent/newTest.component';
 import { ActiveTestComponent } from './components/Active-test/active-test.component';
 import { ResultsComponent } from './components/Results/results.component';
+import { TestResultsComponent } from './components/Results/TestResults/test-results.component';
+import { NotFoundComponent } from './components/NotFound/not-found.component';
 
 const routes: Routes = [
   { path: '', canActivate: [AuthGuard], component: HomeComponent },
@@ -32,14 +34,18 @@ const routes: Routes = [
     component: ResultsComponent,
   },
   {
-    path: 'results/:id',
+    path: 'results/test/:id',
     canActivate: [AuthGuard],
-    component: ResultsComponent,
+    component: TestResultsComponent,
   },
-  { path: 'activeTest/:id', component: ActiveTestComponent },
-
+  {
+    path: 'activeTest/:id',
+    canActivate: [AuthGuard],
+    component: ActiveTestComponent,
+  },
+  { path: '404', component: NotFoundComponent },
   // otherwise redirect to home
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '/404' },
 ];
 
 @NgModule({

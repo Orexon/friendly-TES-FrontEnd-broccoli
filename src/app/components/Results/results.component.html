@@ -72,7 +72,7 @@
             mat-icon-button
             matTooltip="Click to see all results of the same test"
             [matTooltipPosition]="'left'"
-            (click)="openTestResults()"
+            (click)="openTestResults(element.testId)"
           >
             <mat-icon>quiz</mat-icon>
           </button>
