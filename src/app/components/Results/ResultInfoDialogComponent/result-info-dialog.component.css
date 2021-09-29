@@ -1,0 +1,26 @@
+.fcontainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: space-between;
+}
+
+.fitem-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.questionCard {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.Title {
+  color: #000000;
+  font-weight: 500;
+}
+.downloadbtn {
+  margin-bottom: 15px;
+}

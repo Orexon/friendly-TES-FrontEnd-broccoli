@@ -1,0 +1,94 @@
+<h2 mat-dialog-title>{{ this.dialogTitle }}</h2>
+<mat-dialog-content class="mat-typography" class="infoCard">
+  <div class="fcontainer">
+    <div class="fitem-container">
+      <h3 class="Title">Applicant:&nbsp;</h3>
+      <h3>
+        {{ this.fullName }}
+      </h3>
+    </div>
+
+    <div class="fitem-container">
+      <h3 class="Title">Applicant Email:&nbsp;</h3>
+      <h3>
+        {{ this.email }}
+      </h3>
+    </div>
+
+    <div class="fitem-container">
+      <h3 class="Title">Scored Points:&nbsp;</h3>
+      <h3>{{ this.testTotalPoints }}</h3>
+    </div>
+
+    <div class="fitem-container">
+      <h3 class="Title">Time:&nbsp;</h3>
+      <div class="fitem-container">
+        <h3 class="Title">Started at:&nbsp;</h3>
+        <h3>{{ this.startedAt }}&nbsp;</h3>
+      </div>
+      <div class="fitem-container">
+        <h3 class="Title">Overtime:&nbsp;</h3>
+        <h3>{{ this.minutesOvertime }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div *ngFor="let question of this.resultQuestions; let i = index">
+    <mat-card class="questionCard mat-elevation-z4">
+      <mat-card-title
+        >Question{{ i + 1 }}:&nbsp;"{{
+          this.resultQuestions[i].name
+        }}"</mat-card-title
+      >
+      <div class="fcontainer">
+        <div class="fitem-container">
+          <h3 class="Title">Description:&nbsp;</h3>
+          <h3>
+            {{ this.resultQuestions[i].description }}
+          </h3>
+        </div>
+
+        <div class="fitem-container">
+          <h3 class="Title">Question points worth:&nbsp;</h3>
+          <h3>
+            {{ this.resultQuestions[i].worthOfPoints }}
+          </h3>
+        </div>
+
+        <div class="fitem-container">
+          <h3 class="Title">Points scored:&nbsp;</h3>
+          <h3>
+            {{ this.resultQuestions[i].pointsScored }}
+          </h3>
+        </div>
+
+        <div class="fitem-container">
+          <button
+            mat-raised-button
+            class="GlobalDarkBtn downloadbtn"
+            (click)="download(getPath(i))"
+          >
+            Download Solution
+            <mat-icon inline="true">file_download</mat-icon>
+          </button>
+        </div>
+
+        <div class="fitem-container">
+          <button
+            mat-raised-button
+            class="GlobalDarkBtn downloadbtn"
+            (click)="download(getSubmitionFilePath(i))"
+          >
+            Download Applicant Solution
+            <mat-icon inline="true">file_download</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button class="GlobalDarkBtn" mat-dialog-close>
+    Cancel
+  </button>
+</mat-dialog-actions>

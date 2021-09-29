@@ -9,6 +9,7 @@ import { AuthGuard } from './helpers/auth.guard';
 import { TestsComponent } from './components/Tests/tests.component';
 import { NewTestComponent } from './components/Tests/NewTestComponent/newTest.component';
 import { ActiveTestComponent } from './components/Active-test/active-test.component';
+import { ResultsComponent } from './components/Results/results.component';
 
 const routes: Routes = [
   { path: '', canActivate: [AuthGuard], component: HomeComponent },
@@ -24,6 +25,16 @@ const routes: Routes = [
     path: 'tests/editTest/:id',
     canActivate: [AuthGuard],
     component: NewTestComponent,
+  },
+  {
+    path: 'results',
+    canActivate: [AuthGuard],
+    component: ResultsComponent,
+  },
+  {
+    path: 'results/:id',
+    canActivate: [AuthGuard],
+    component: ResultsComponent,
   },
   { path: 'activeTest/:id', component: ActiveTestComponent },
 

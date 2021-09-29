@@ -141,8 +141,8 @@ export class NewTestComponent implements OnInit {
             name: x.name,
             description: x.description,
             enumSelect: x.testType,
-            dateFrom: x.validFrom,
-            dateTo: x.validTo,
+            dateFrom: new Date(x.validFrom),
+            dateTo: new Date(x.validTo),
             hourInput: calculateTimeLimit(x.timeLimit).totalHours,
             minutesInput: calculateTimeLimit(x.timeLimit).mins,
             Questions: x.questions.forEach((element) => {
@@ -184,6 +184,7 @@ export class NewTestComponent implements OnInit {
 
   get dateFromValue() {
     var localDate = this.testForm.controls['dateFrom'].value;
+    console.log(localDate);
     var year = localDate.getFullYear();
     var month = localDate.getMonth();
     var day = localDate.getDate();
@@ -350,7 +351,7 @@ export class NewTestComponent implements OnInit {
       return object;
     }
   }
-  //test here
+
   private displayError(message: string) {
     this.alertService.error(message, { autoClose: false });
   }

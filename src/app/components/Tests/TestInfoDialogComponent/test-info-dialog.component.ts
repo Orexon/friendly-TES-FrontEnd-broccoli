@@ -24,6 +24,7 @@ export class TestInfoDialogComponent implements OnInit {
     mins: number;
   };
   urlLinkId: string;
+
   constructor(
     public dialogRef: MatDialogRef<TestInfoDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,

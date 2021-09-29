@@ -41,6 +41,7 @@ export class TestsComponent implements OnInit, OnDestroy {
     'testlink',
     'actions',
   ];
+
   public dataSource = new MatTableDataSource<User>();
   private subs = new Subscription();
   private dataArray: any;
@@ -82,7 +83,6 @@ export class TestsComponent implements OnInit, OnDestroy {
         this.dataSource = new MatTableDataSource(this.dataArray);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(res);
       },
       (err: string) => {
         this.displayError(err);
